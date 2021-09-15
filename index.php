@@ -3,7 +3,7 @@ require dirname(__FILE__) . "/classes/all_classes_include.php";
 
 ?>
 
-Test Database connection
+Test Database connection<br>
 
 <?php
 try {
