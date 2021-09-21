@@ -5,10 +5,10 @@ class Constants {
   // DEVELOPMENT CONNECTION INFORMATION
   //************************************************************************************************
 
-  public static $DATABASE_HOST     = "db5004907070.hosting-data.io";
-  public static $DATABASE_USERNAME = "dbu56069";
-  public static $DATABASE_PASSWORD = "T@terM@ker1";
-  public static $DATABASE_NAME     = "dbs4110508";
+  public static $DATABASE_HOST     = "Desktop-4F7H5PV";
+  public static $DATABASE_USERNAME = "root";
+  public static $DATABASE_PASSWORD = "password";
+  public static $DATABASE_NAME     = "rvmc";
 
 //  public static $DATABASE_HOST     = "127.0.0.1";
 //  public static $DATABASE_USERNAME = "ubx";
