@@ -18,8 +18,6 @@ function dummyFunction() {
 </script>
 <?php
 
-
-
 // TODO: REMOVE IF NO FORMS ARE BEING SUBMITTED ON THIS PAGE
 // check to see if they submitted the form with a proper action
 if (isset($_POST["action"]) && isset($_POST["listingId"]) &&
