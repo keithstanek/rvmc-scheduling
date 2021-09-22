@@ -1,5 +1,5 @@
 <?php
-require dirname(__FILE__) . "/classes/all_classes_include.php";
+require dirname(__FILE__) . "/../classes/all_classes_include.php";
 ?>
 
 

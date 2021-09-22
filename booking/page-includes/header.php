@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-require dirname(__FILE__) . "/../classes/all_classes_include.php";
+require dirname(__FILE__) . "/../../classes/all_classes_include.php";
 ?>
 <head>
     <meta charset="utf-8">
