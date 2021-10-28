@@ -12,7 +12,7 @@ CREATE TABLE `rvmc`.`teacher` (
   PRIMARY KEY (`TeacherID`));
 
 CREATE TABLE `rvmc`.`parent` (
-  `parent_id` INT NOT NULL AUTO INCREMENT,
+  `parent_id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NULL,
   `last_name` VARCHAR(45) NULL,
   `email` VARCHAR(45) NULL,
