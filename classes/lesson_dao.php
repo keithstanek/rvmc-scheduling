@@ -47,7 +47,7 @@ class LessonDao {
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from lesson where LessonlessonID=:LessonlessonID";
+            $sql = "select * from lesson where lessonID=:lessonID";
             $stmt = $db->prepare($sql);
             $stmt->bindValue("lessonID", $lessonID);
             if ($stmt->execute()) {
@@ -87,7 +87,7 @@ class LessonDao {
     }
 
     public function update($lesson) {
-        $sql = "update lesson set Lesson_Name=:Lesson_Name, Lesson_Type=:Lesson_Type where LessonlessonID=:LessonlessonID";
+        $sql = "update lesson set Lesson_Name=:Lesson_Name, Lesson_Type=:Lesson_Type where lessonID=:lessonID";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
@@ -106,7 +106,7 @@ class LessonDao {
     }
 
     public function delete($lesson) {
-        $sql = "delete from lesson where LessonlessonID=:LessonlessonID";
+        $sql = "delete from lesson where lessonID=:lessonID";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);

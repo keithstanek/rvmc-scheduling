@@ -49,7 +49,7 @@ class ParentDao {
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from parent where parent_parent_id=:parent_parent_id";
+            $sql = "select * from parent where parent_id=:parent_id";
             $stmt = $db->prepare($sql);
             $stmt->bindValue("parent_id", $parent_id);
             if ($stmt->execute()) {
@@ -91,7 +91,7 @@ class ParentDao {
     }
 
     public function update($parent) {
-        $sql = "update parent set first_name=:first_name, last_name=:last_name, email=:email, phone=:phone where parent_parent_id=:parent_parent_id";
+        $sql = "update parent set first_name=:first_name, last_name=:last_name, email=:email, phone=:phone where parent_id=:parent_id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
@@ -112,7 +112,7 @@ class ParentDao {
     }
 
     public function delete($parent) {
-        $sql = "delete from parent where parent_parent_id=:parent_parent_id";
+        $sql = "delete from parent where parent_id=:parent_id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
