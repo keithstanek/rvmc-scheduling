@@ -12,7 +12,7 @@ CREATE TABLE `rvmc`.`teacher` (
   PRIMARY KEY (`TeacherID`));
 
 CREATE TABLE `rvmc`.`parent` (
-  `parent_id` INT NOT NULL AUTO INCREMENT,
+  `parent_id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NULL,
   `last_name` VARCHAR(45) NULL,
   `email` VARCHAR(45) NULL,
@@ -32,3 +32,13 @@ CREATE TABLE `rvmc`.`student` (
     REFERENCES `rvmc`.`parent` (`parent_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+   
+CREATE TABLE `rvmc`.`checkin` (
+  `idcheckin` INT NOT NULL AUTO_INCREMENT,
+  `first_name` VARCHAR(45) NULL,
+  `last_name` VARCHAR(45) NULL,
+  `checkin_date` TIMESTAMP(3) NULL DEFAULT NULL ;,
+  `instructor` VARCHAR(45),
+  `instrument` VARCHAR(45) NULL,
+  PRIMARY KEY (`idcheckin`));
+    
