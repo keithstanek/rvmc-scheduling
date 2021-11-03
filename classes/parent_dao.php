@@ -4,12 +4,12 @@
  * SQL To Create the Parent Table
 
 CREATE TABLE `parent` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `parent_id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(75) NULL,
   `last_name` VARCHAR(75) NULL,
   `email` VARCHAR(75) NULL,
   `phone` VARCHAR(15) NULL,
-PRIMARY KEY (`id`));
+PRIMARY KEY (`parent_id`));
 
  * If there are table changes, add the alter statements below. Make sure they are
  * in the order they should be executed in!!
@@ -43,15 +43,15 @@ class ParentDao {
         return $records;
     }
 
-    public function getParentById($id) {
+    public function getParentByparent_id($parent_id) {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from parent where id=:id";
+            $sql = "select * from parent where parent_parent_id=:parent_parent_id";
             $stmt = $db->prepare($sql);
-            $stmt->bindValue("id", $id);
+            $stmt->bindValue("parent_id", $parent_id);
             if ($stmt->execute()) {
                 // loop through the results from the database
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -76,8 +76,8 @@ class ParentDao {
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("first_name", $parent->firstName);
-            $stmt->bindValue("last_name", $parent->lastName);
+            $stmt->bindValue("first_name", $parent->first_name);
+            $stmt->bindValue("last_name", $parent->last_name);
             $stmt->bindValue("email", $parent->email);
             $stmt->bindValue("phone", $parent->phone);
 
@@ -91,16 +91,16 @@ class ParentDao {
     }
 
     public function update($parent) {
-        $sql = "update parent set first_name=:first_name, last_name=:last_name, email=:email, phone=:phone where id=:id";
+        $sql = "update parent set first_name=:first_name, last_name=:last_name, email=:email, phone=:phone where parent_parent_id=:parent_parent_id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("first_name", $parent->firstName);
-            $stmt->bindValue("last_name", $parent->lastName);
+            $stmt->bindValue("first_name", $parent->first_name);
+            $stmt->bindValue("last_name", $parent->last_name);
             $stmt->bindValue("email", $parent->email);
             $stmt->bindValue("phone", $parent->phone);
-            $stmt->bindValue("id", $parent->id);
+            $stmt->bindValue("parent_id", $parent->parent_id);
 
             $stmt->execute();
             $db = null;
@@ -112,12 +112,12 @@ class ParentDao {
     }
 
     public function delete($parent) {
-        $sql = "delete from parent where id=:id";
+        $sql = "delete from parent where parent_parent_id=:parent_parent_id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("id", $parent->id);
+            $stmt->bindValue("parent_id", $parent->parent_id);
 
             $stmt->execute();
             $db = null;
@@ -132,9 +132,9 @@ class ParentDao {
         $parent = new Guardian();
 
         // populate the fields
-        $parent->id = $row["id"];
-        $parent->firstName = $row["first_name"];
-        $parent->lastName = $row["last_name"];
+        $parent->parent_id = $row["parent_id"];
+        $parent->first_name = $row["first_name"];
+        $parent->last_name = $row["last_name"];
         $parent->email = $row["email"];
         $parent->phone = $row["phone"];
 
@@ -146,9 +146,9 @@ class ParentDao {
 // This class will be the model that represents the database table and html form
 // Parent is a reserved word..... need to name this class something else
 class Guardian {
-    public $id = 0;
-    public $firstName = "";
-    public $lastName = "";
+    public $parent_id = 0;
+    public $first_name = "";
+    public $last_name = "";
     public $email = "";
     public $phone = "";
 

@@ -4,10 +4,10 @@
  * SQL To Create the Parent Table
 
 CREATE TABLE `lesson` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `lessonID` INT NOT NULL AUTO_INCREMENT,
   `Lesson_Name` VARCHAR(45) NULL,
   `Lesson_Type` VARCHAR(45) NULL,
-PRIMARY KEY (`id`));
+PRIMARY KEY (`lessonID`));
 
  * If there are table changes, add the alter statements below. Make sure they are
  * in the order they should be executed in!!
@@ -41,15 +41,15 @@ class LessonDao {
         return $records;
     }
 
-    public function getLessonByID($id) {
+    public function getLessonBylessonID($lessonID) {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from lesson where id=:id";
+            $sql = "select * from lesson where LessonlessonID=:LessonlessonID";
             $stmt = $db->prepare($sql);
-            $stmt->bindValue("id", $id);
+            $stmt->bindValue("lessonID", $lessonID);
             if ($stmt->execute()) {
                 // loop through the results from the database
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -87,14 +87,14 @@ class LessonDao {
     }
 
     public function update($lesson) {
-        $sql = "update lesson set Lesson_Name=:Lesson_Name, Lesson_Type=:Lesson_Type where id=:id";
+        $sql = "update lesson set Lesson_Name=:Lesson_Name, Lesson_Type=:Lesson_Type where LessonlessonID=:LessonlessonID";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
             $stmt->bindValue("Lesson_Name", $lesson->Lesson_Name);
             $stmt->bindValue("Lesson_Type", $lesson->Lesson_Type);
-            $stmt->bindValue("id", $lesson->id);
+            $stmt->bindValue("lessonID", $lesson->lessonID);
 
             $stmt->execute();
             $db = null;
@@ -106,12 +106,12 @@ class LessonDao {
     }
 
     public function delete($lesson) {
-        $sql = "delete from lesson where id=:id";
+        $sql = "delete from lesson where LessonlessonID=:LessonlessonID";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("id", $lesson->id);
+            $stmt->bindValue("lessonID", $lesson->lessonID);
 
             $stmt->execute();
             $db = null;
@@ -126,7 +126,7 @@ class LessonDao {
         $lesson = new Lesson();
 
         // populate the fields
-        $lesson->id = $row["id"];
+        $lesson->lessonID = $row["lessonID"];
         $lesson->Lesson_Name = $row["Lesson_Name"];
         $lesson->Lesson_Type = $row["Lesson_Type"];
 
@@ -138,7 +138,7 @@ class LessonDao {
 // This class will be the model that represents the database table and html form
 // Parent is a reserved word..... need to name this class something else
 class Lesson {
-    public $id = 0;
+    public $lessonID = 0;
     public $Lesson_Name = "";
     public $Lesson_Type = "";
 
