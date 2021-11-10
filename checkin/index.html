@@ -78,22 +78,22 @@
 	
   <body>
 	  <div class="container" style="height: 100%; max-height: 100%;">
-		<form id="myForm" class="stu_form" action="/action_page.php" style="opacity: .9;">
+		<form name="frmCheckin" id="myForm" class="stu_form" method="post" action="connect.php" style="opacity: .9;" >
 		 <h1>Check-In</h1>
 		 <label for="fname"><b>First Name</b></label>
-		 <input type="text" id="fname" name="fname" style=" margin: 5px 0 10px 0; border-radius: 4px;" required>
+		 <input type="text" name="fname" id="fname" name="fname" style=" margin: 5px 0 10px 0; border-radius: 4px;" required>
 		 <label for="lname"><b>Last Name</b></label><br>
-		 <input type="text" id="lname" name="lname" style=" margin: 5px 0 35px 0; border-radius: 4px;" required>
+		 <input type="text" name="lname" id="lname" name="lname" style=" margin: 5px 0 35px 0; border-radius: 4px;" required>
 			
 		<!-- Button trigger modal -->
 		<div class="row" style="align-content: center; width: 100%; margin: auto;">
 		  <div class="column" style="width:50%;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="background-color: #C6C6C6; color: black; margin: 5px 0 35px 0; width: 95%;">
 		  Select Instructor
 		</button></div>
-		  <div class="column"  style="width: 50%;"><input id="selIns" type="text" class="field left" style="text-align: center; border-radius: 4px; background-color: #C6C6C6" readonly></div>
+		  <div class="column"  style="width: 50%;"><input id="selIns" name="instructor" type="text" class="field left" style="text-align: center; border-radius: 4px; background-color: #C6C6C6" readonly></div>
 		</div>	
 			
-		<select id="instrument" class="selectpicker selector">
+		<select id="instrument" name="instrument" class="selectpicker selector">
 		  <optgroup label="Instrument">
 			<option selected="selected">Select Instrument</option>
 			<option>Guitar</option>
@@ -124,7 +124,7 @@
                             <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input1" value="Instructor 1">
+								<input type="text" id="input1" value="Instructor 1" readonly><>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue1();" class="btn btn-primary" id="btn1">Pick Me!</button>
 							  </div>
@@ -133,7 +133,7 @@
                     <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input2" value="Instructor 2">
+								<input type="text" id="input2" value="Instructor 2" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue2();" class="btn btn-primary" id="btn2">Pick Me!</button>
 							  </div>
@@ -144,7 +144,7 @@
                             <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input3" value="Instructor 3">
+								<input type="text" id="input3" value="Instructor 3" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue3();" class="btn btn-primary" id="btn3">Pick Me!</button>
 							  </div>
@@ -153,7 +153,7 @@
                     <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input4" value="Instructor 4">
+								<input type="text" id="input4" value="Instructor 4" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue4();" class="btn btn-primary" id="btn4">Pick Me!</button>
 							  </div>
@@ -164,7 +164,7 @@
                             <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input5" value="Instructor 5">
+								<input type="text" id="input5" value="Instructor 5" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue5();" class="btn btn-primary" id="btn5">Pick Me!</button>
 							  </div>
@@ -173,7 +173,7 @@
                     <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input6" value="Instructor 6">
+								<input type="text" id="input6" value="Instructor 6" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue6();" class="btn btn-primary" id="btn6">Pick Me!</button>
 							  </div>
@@ -185,7 +185,7 @@
                             <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input7" value="Instructor 7">
+								<input type="text" id="input7" value="Instructor 7" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue7();" class="btn btn-primary" id="btn7">Pick Me!</button>
 							  </div>
@@ -193,7 +193,7 @@
                     <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input8" value="Instructor 8">
+								<input type="text" id="input8" value="Instructor 8" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue8();" class="btn btn-primary" id="btn8">Pick Me!</button>
 							  </div>
