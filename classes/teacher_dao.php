@@ -76,14 +76,15 @@ class TeacherDao {
             $stmt = $db->prepare($sql);
 
             $stmt->bindValue("teacher_name", $teacher->teacher_name);
-            $stmt->bindValue("teacher_image", $teacher->teacher_image`);
+            $stmt->bindValue("teacher_image", $teacher->teacher_image);
             $stmt->bindValue("teacher_phone", $teacher->teacher_phone);
 
             $stmt->execute();
             $db = null;
-
+            
             return "Insert Successful";
-        } catch (PDOException $e) {
+            }
+            catch (PDOException $e) {
             return "ERROR: " . $e->getMessage();
         }
     }
