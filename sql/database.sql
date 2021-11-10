@@ -1,18 +1,18 @@
 CREATE TABLE `rvmc`.`lesson` (
-  `lessonID` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `Lesson_Name` VARCHAR(45) NULL,
   `Lesson_Type` VARCHAR(45) NULL,
   PRIMARY KEY (`lessonID`));
 
 CREATE TABLE `rvmc`.`teacher` (
-  `TeacherID` INT NOT NULL AUTO_INCREMENT,
+  `ID` INT NOT NULL AUTO_INCREMENT,
   `teacher_name` VARCHAR(45) NULL,
   `teacher_image` VARCHAR(45) NULL,
   `teacher_phone` VARCHAR(45) NULL,
   PRIMARY KEY (`TeacherID`));
 
 CREATE TABLE `rvmc`.`parent` (
-  `parent_id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NULL,
   `last_name` VARCHAR(45) NULL,
   `email` VARCHAR(45) NULL,
@@ -20,7 +20,7 @@ CREATE TABLE `rvmc`.`parent` (
   PRIMARY KEY (`parent_id`));
 
 CREATE TABLE `rvmc`.`student` (
-  `student_id` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NULL,
   `last_name` VARCHAR(45) NULL,
   `DOB` DATE NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `rvmc`.`student` (
     ON UPDATE NO ACTION);
    
 CREATE TABLE `rvmc`.`checkin` (
-  `idcheckin` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NULL,
   `last_name` VARCHAR(45) NULL,
   `checkin_date` TIMESTAMP(3) NULL DEFAULT NULL ;,
