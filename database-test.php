@@ -105,7 +105,7 @@ Teacher Form
 
 Student Form
 <form action="database-test.php" method="post">
-	<!-- <label for="B1">StudentID</label><input type="text" name="B1"><br> -->
+	<label for="B1">StudentID</label><input type="text" name="B1"><br>
 	<label for="B2">First Name</label><input type="text" name="B2"><br>
 	<label for="B3">Last Name</label><input type="text" name="B3"><br>
 	<label for="B4">Date of Birth (YYYY-MM-DD)</label><input type="date" name="B4"><br>
@@ -113,7 +113,7 @@ Student Form
 	<input type="submit" value="Submit" name="StudentSubmit" onclick="
 <?php
 			 if(array_key_exists('StudentSubmit', $_POST)) {
-				//$Student->__set('student_id', $_POST['B1']);
+				$Student->__set('student_id', $_POST['B1']);
 				$Student->__set('first_name', $_POST['B2']);
 				$Student->__set('last_name', $_POST['B3']);
 				$Student->__set('DOB', $_POST['B4']);
