@@ -142,7 +142,7 @@ class TeacherDao {
 // This class will be the model that represents the database table and html form
 // teacher is a reserved word..... need to name this class something else
 class Teacher {
-    public $TeacherID = 0;
+    public $TeacherID = NULL;
     public $teacher_name = "";
     public $teacher_image = "";
     public $teacher_phone = "";
