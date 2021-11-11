@@ -63,35 +63,40 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <label for="floatingInput">First Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="<?=$parent->email?>">
-                                    <label for="floatingInput">Email address</label>
+                                    <input type="email" name="email" class="form-control" id="floatingInput2" placeholder="name@example.com" value="<?=$parent->email?>">
+                                    <label for="floatingInput2">Email address</label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$parent->lastName?>">
-                                    <label for="floatingInput">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control" id="floatingInput3" placeholder="Doe" value="<?=$parent->lastName?>">
+                                    <label for="floatingInput3">Last Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="phone" class="form-control" id="floatingInput" placeholder="123-456-7890" value="<?=$parent->phone?>">
-                                    <label for="floatingInput">Phone No.</label>
+                                    <input type="text" name="phone" class="form-control" id="floatingInput4" placeholder="123-456-7890" value="<?=$parent->phone?>">
+                                                                        
+                                    <label for="floatingInput4">Phone No.</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
                                 <input type="hidden" name="id" value="<?=$parent->id?>">
+                                
                                 <?php
+                                selection:
                                 if ($parent->id == "") {
                                 ?>
-                                <button type="submit" name="btnInsert" value="insert" class="btn btn-primary">Insert</button>
+                                <button type="submit" name="btnInsert" value="insert" class="btn btn-primary" >Insert</button>
                                 <?php
                                 } else {
                                 ?>
                                 <button type="submit" name="btnUpdate" value="update" class="btn btn-primary">Update</button>
                                 <button type="submit" name="btnDelete" value="delete" class="btn btn-warning">Delete</button>
+                                <button type="submit" name="btnReset" value="reset" class="btn btn-danger" onclick="confirmation();">Reset</button>
+                                
                                 <?php
-                                }
+                                
                                 ?>
                             </div>
                         </div>
@@ -159,5 +164,16 @@ if ( str_contains($dbMessage, "ERROR") ) {
         </div>
     </div>
 </div>
+
+<script>
+
+function confirmation(){
+			document.getElementById("floatingInput").value = "";
+		    document.getElementById("floatingInput2").value = "";
+            document.getElementById("floatingInput3").value = "";
+            document.getElementById("floatingInput4").value = "";
+            
+    }
+</script>
 
 <?php  require dirname(__FILE__) . "/page-includes/footer.php";  ?>
