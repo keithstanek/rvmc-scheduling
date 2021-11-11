@@ -84,23 +84,21 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 <input type="hidden" name="id" value="<?=$parent->id?>">
                                 
                                 <?php
-                                selection:
                                 if ($parent->id == "") {
                                 ?>
                                 <button type="submit" name="btnInsert" value="insert" class="btn btn-primary" >Insert</button>
                                 <?php
-                                } else {
+                                }
+                                 else {
                                 ?>
                                 <button type="submit" name="btnUpdate" value="update" class="btn btn-primary">Update</button>
                                 <button type="submit" name="btnDelete" value="delete" class="btn btn-warning">Delete</button>
                                 <button type="submit" name="btnReset" value="reset" class="btn btn-danger" onclick="confirmation();">Reset</button>
                                 
-                                <?php
-                                
-                                ?>
                             </div>
                         </div>
                         <?php
+                        }
                         if ($dbMessage != "") {
                         ?>
                                 <br>
