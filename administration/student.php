@@ -19,8 +19,7 @@ $student = new Student();
 isset($_POST["id"]) ? $student->id = $_POST["id"] : $student->id = "";
 isset($_POST["first_name"]) ? $student->firstName = $_POST["first_name"] : $student->firstName = "";
 isset($_POST["last_name"]) ? $student->lastName = $_POST["last_name"] : $student->lastName = "";
-isset($_POST["email"]) ? $student->email = $_POST["email"] : $student->email = "";
-isset($_POST["phone"]) ? $student->phone = $_POST["phone"] : $student->phone = "";
+isset($_POST["DOB"]) ? $student->DOB = $_POST["DOB"] : $student->DOB = "";
 
 
 // if they submitted the form, take the values from above and insert/update/delete the record
@@ -63,18 +62,14 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <label for="floatingInput">First Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="<?=$student->email?>">
-                                    <label for="floatingInput">Email address</label>
+                                    <input type="text" name="Date of Birth" class="form-control" id="floatingInput" placeholder="MM-DD-YYYY" value="<?=$student->DOB?>">
+                                    <label for="floatingInput">Date of Birth</label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->lastName?>">
                                     <label for="floatingInput">Last Name</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <input type="text" name="phone" class="form-control" id="floatingInput" placeholder="123-456-7890" value="<?=$student->phone?>">
-                                    <label for="floatingInput">Phone No.</label>
                                 </div>
                             </div>
                         </div>
@@ -125,8 +120,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <th scope="col">#</th>
                                     <th scope="col">First Name</th>
                                     <th scope="col">Last Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Phone</th>
+                                    <th scope="col">DOB</th>
                                     <th scope="col">&nbsp;</th>
                                 </tr>
                             </thead>
@@ -139,9 +133,8 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 <tr>
                                     <th scope="row"><a href="student.php?id=<?=$student->id?>"><?= $student->id ?></a></th>
                                     <td><?= $student->firstName ?></td>
-                                    <td><?= $student->lastName ?></td>
-                                    <td><?= $student->email ?></td>
-                                    <td><?= $student->phone ?></td>
+                                    <td><?= $student->lastName ?></td
+                                    <td><?= $student->DOB ?></td>
                                     <td>
                                         <a href="student.php?id=<?=$student->id?>" class="fa fa-copy"></a> &nbsp;
                                         <a href="student.php?id=<?=$student->id?>" class="fa fa-trash"></a>

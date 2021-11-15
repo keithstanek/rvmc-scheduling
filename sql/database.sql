@@ -9,6 +9,7 @@ CREATE TABLE `rvmc`.`teacher` (
   `teacher_name` VARCHAR(45) NULL,
   `teacher_image` VARCHAR(45) NULL,
   `teacher_phone` VARCHAR(45) NULL,
+  `teacher_email VARCHAR(45) NULL,
   PRIMARY KEY (`TeacherID`));
 
 CREATE TABLE `rvmc`.`parent` (
