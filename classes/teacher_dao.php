@@ -127,6 +127,40 @@ class TeacherDao {
         }
     }
 
+    public function deletelessons($teacher) {
+    $sql = "delete from teacher_lesson where teacherid =:teacherid";
+    $db = DbUtil::getConnection();
+            try {
+                 $stmt = $db->prepare($sql);
+
+                $stmt->bindValue("teacherid", $teacher->id);
+
+                $stmt->execute();
+                $db = null;
+
+                return "Delete Successful";
+              }   catch (PDOException $e) {
+            return "ERROR: " . $e->getMessage();
+        }
+    }
+
+    public function insertlessons($teacher) {
+    $sql = "insert into teacher_lessons (teacherid, lessonid) values (:teacherid, :lessonid)";
+    $db = DbUtil::getConnection();
+            try {
+                 $stmt = $db->prepare($sql);
+                foreach($teacher->lessons as $lesson){
+                    $stmt->bindValue("teacherid", $teacher->id);
+                    $stmt->bindValue("lessonid", $lesson->id)
+                    $stmt->execute();
+                }
+                $db = null;
+                return "Delete Successful";
+            }   catch (PDOException $e) {
+            return "ERROR: " . $e->getMessage();
+        }
+    }
+
     private function setRowValue($row) {
         $teacher = new teacher();
 
@@ -149,6 +183,7 @@ class Teacher {
     public $teacher_name = "";
     public $teacher_phone = "";
     public $teacher_email ="";
+    public $lessons=array();
 
     // if the above fields were private, you would use the two methods below
     // to get and set the value of the property *** We just call the varibles

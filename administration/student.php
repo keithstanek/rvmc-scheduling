@@ -59,22 +59,35 @@ if ( str_contains($dbMessage, "ERROR") ) {
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="firstname" class="form-control" id="floatingInput" placeholder="John" value="<?=$student->first_name?>">
+                                    <input type="text" name="firstname" class="form-control" id="floatingInput1" placeholder="John" value="<?=$student->first_name?>">
                                     <label for="floatingInput">First Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="DOB" class="form-control" id="floatingInput" placeholder="MM-DD-YYYY" value="<?=$student->DOB?>">
+                                    <input type="text" name="DOB" class="form-control" id="floatingInput2" placeholder="MM-DD-YYYY" value="<?=$student->DOB?>">
                                     <label for="floatingInput">Date of Birth</label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="lastname" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->last_name?>">
+                                    <input type="text" name="lastname" class="form-control" id="floatingInput3" placeholder="Doe" value="<?=$student->last_name?>">
                                     <label for="floatingInput">Last Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" name="ParentID" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->parent_id?>">
                                     <label for="floatingInput">Parent</label>
+                                    <select id="parent" name="ParentID" value="<?= $parent->id ?>">
+                                    <option value=""></option>    
+                                    <?php
+                                        $parentsDao = new ParentDao();
+                                        $parents = $parentsDao->getAllParents();
+                                        foreach ($parents as $parent) {
+                                        $selected = ($parent->id == $student->parent_id) ? "selected" : ""; 
+                                        ?>
+                                            <option <?=$selected ?> value="<?= $parent->id ?>"><?= $parent->firstName ?> <?= $parent->lastName ?></option> 
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -90,6 +103,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 ?>
                                 <button type="submit" name="btnUpdate" value="update" class="btn btn-primary">Update</button>
                                 <button type="submit" name="btnDelete" value="delete" class="btn btn-warning">Delete</button>
+                                <button type="submit" name="btnReset" value="reset" class="btn btn-danger" onclick="freset();">Reset</button>
                                 <?php
                                 }
                                 ?>
@@ -112,7 +126,18 @@ if ( str_contains($dbMessage, "ERROR") ) {
             </div>
         </div>
     </div>
+    <Script>
+    //form reset function                                                                                       
+    function freset(){
 
+            document.getElementById("floatingInput1").value = "";   //parent form input fname
+            document.getElementById("floatingInput2").value = "";  //parent form input lname
+            document.getElementById("floatingInput3").value = "";  //parent form input email
+            document.getElementById("parent").value = "";  //parent form input phone
+            document.getElementById("pid").value = -1;
+
+          }
+    </script>
 
     <div class="row">
         <div class="col-12">

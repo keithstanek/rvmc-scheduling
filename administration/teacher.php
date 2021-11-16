@@ -19,7 +19,7 @@ isset($_POST["id"]) ? $teacher->id = $_POST["id"] : $teacher->id = "";
 isset($_POST["teacher_name"]) ? $teacher->teacher_name = $_POST["teacher_name"] : $teacher->teacher_name = "";
 isset($_POST["teacher_email"]) ? $teacher->teacher_email = $_POST["teacher_email"] : $teacher->teacher_email = "";
 isset($_POST["phone"]) ? $teacher->teacher_phone = $_POST["phone"] : $teacher->teacher_phone = "";
-
+isset($_POST["lessonid"]) ? $teacher->lessons = $_POST["lessons"] : $teacher->lessons = array();
 
 // if they submitted the form, take the values from above and insert/update/delete the record
 if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {
@@ -67,7 +67,27 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <input type="text" name="phone" class="form-control" id="floatingInput" placeholder="123-456-7890" value="<?=$teacher->teacher_phone?>">
                                     <label for="floatingInput">Phone No.</label>
                                 </div>
-                            </div>
+                                <div class="form-floating mb-3">
+                                <select id="lessons" multiple name="lessonids">
+                                    <option value=""></option>    
+                                    <?php
+                                        $lessonDao = new LessonDao();
+                                        $lessons = $lessonDao->getAllLessons(); //loop through all lessons
+                                        foreach ($lessons as $lesson) {
+                                            $selected = "";
+                                            foreach($teacher->lessons as $l){          //searching for valid lesson selected under teacher
+                                                if($l->id==$lesson->id){      
+                                                    $selected = "selected";     //once selected is found break the loop
+                                                    break;
+                                                }
+                                            } 
+                                        ?>
+                                            <option <?=$selected ?> value="<?= $lesson->id ?>"> <?= $lesson->Lesson_Name ?></option>  
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
