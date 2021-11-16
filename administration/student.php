@@ -58,7 +58,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="John" value="<?=$student->firstName?>">
+                                    <input type="text" name="firstname" class="form-control" id="floatingInput" placeholder="John" value="<?=$student->firstName?>">
                                     <label for="floatingInput">First Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
@@ -68,8 +68,12 @@ if ( str_contains($dbMessage, "ERROR") ) {
                             </div>
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->lastName?>">
+                                    <input type="text" name="lastname" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->lastName?>">
                                     <label for="floatingInput">Last Name</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="ParentID" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->ParentID?>">
+                                    <label for="floatingInput">Parent</label>
                                 </div>
                             </div>
                         </div>
