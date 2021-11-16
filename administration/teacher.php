@@ -10,19 +10,20 @@ require dirname(__FILE__) . "/page-includes/page-wrapper-start.php";
 $dbMessage = "";
 $dbMessageBg = "bg-primary";
 $action = "insert"; // the default action for the page load
-$teacherDao = new teacherDao();
+$teacherDao = new TeacherDao();
 
 $teacher = new Teacher();
 
 // check ternary operator --> true ? do this : else this;
 isset($_POST["id"]) ? $teacher->id = $_POST["id"] : $teacher->id = "";
 isset($_POST["teacher_name"]) ? $teacher->teacher_name = $_POST["teacher_name"] : $teacher->teacher_name = "";
-isset($_POST["teacher_email"]) ? $teacher->teacher_email = $_POST["teacher_email"] : $teacher->teacher_email;
-isset($_POST["teacher_phone"]) ? $teacher->teacher_phone = $_POST["teacher_phone"] : $teacher->teacher_phone = "";
+isset($_POST["teacher_email"]) ? $teacher->teacher_email = $_POST["teacher_email"] : $teacher->teacher_email = "";
+isset($_POST["phone"]) ? $teacher->teacher_phone = $_POST["phone"] : $teacher->teacher_phone = "";
 
 
 // if they submitted the form, take the values from above and insert/update/delete the record
 if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {
+    
     $dbMessage = $teacherDao->insert($teacher);
 } else if ( isset($_POST["btnUpdate"]) && $_POST["btnUpdate"] == "update" ) {
     $dbMessage = $teacherDao->update($teacher);
@@ -36,7 +37,7 @@ if ( isset($_GET["id"]) ) {
     $id = $_GET["id"];
 
     // get the person data from the table
-    $teacher = $teacherDao->getTeacherByTeacherID($id);
+    $teacher = $teacherDao->getTeacherById($id);
 }
 
 if ( str_contains($dbMessage, "ERROR") ) {
@@ -128,8 +129,8 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 <tr>
                                     <th scope="row"><a href="teacher.php?id=<?=$teacher->id?>"><?= $teacher->id ?></a></th>
                                     <td><?= $teacher->teacher_name ?></td>
-                                    <td><?= $teacher->email ?></td>
-                                    <td><?= $teacher->phone ?></td>
+                                    <td><?= $teacher->teacher_email ?></td>
+                                    <td><?= $teacher->teacher_phone ?></td>
                                     <td>
                                         <a href="teacher.php?id=<?=$teacher->id?>" class="fa fa-copy"></a> &nbsp;
                                         <a href="teacher.php?id=<?=$teacher->id?>" class="fa fa-trash"></a>

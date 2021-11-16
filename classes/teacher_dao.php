@@ -70,15 +70,15 @@ class TeacherDao {
     }
 
     public function insert($teacher) {
-        $sql = "insert into teacher (teacher_name, teacher_image, teacher_phone) values (:teacher_name, :teacher_image, :teacher_phone)";
+        $sql = "insert into teacher (teacher_name, teacher_email, teacher_phone) values (:teacher_name, :teacher_email, :teacher_phone)";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
             $stmt->bindValue("teacher_name", $teacher->teacher_name);
-            $stmt->bindValue("teacher_image", $teacher->teacher_image);
+            //$stmt->bindValue("teacher_image", $teacher->teacher_image);
             $stmt->bindValue("teacher_phone", $teacher->teacher_phone);
-            $stmt->bindValue("teacher_email", $teacher->teacher_phone);
+            $stmt->bindValue("teacher_email", $teacher->teacher_email);
 
             $stmt->execute();
             $db = null;
@@ -91,15 +91,14 @@ class TeacherDao {
     }
 
     public function update($teacher) {
-        $sql = "update teacher set teacher_name=:teacher_name, teacher_image=:teacher_image, teacher_phone=:teacher_phone, teacher_email:teacher_email where id=:id";
+        $sql = "update teacher set teacher_name=:t_name, teacher_phone=:t_phone, teacher_email=:t_email where id=:id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("teacher_name", $teacher->teacher_name);
-            $stmt->bindValue("teacher_image", $teacher->teacher_image);
-            $stmt->bindValue("teacher_phone", $teacher->teacher_phone);
-            $stmt->bindValue("teacher_email", $teacher->teacher_email);
+            $stmt->bindValue("t_name", $teacher->teacher_name);
+            $stmt->bindValue("t_phone", $teacher->teacher_phone);
+            $stmt->bindValue("t_email", $teacher->teacher_email);
             $stmt->bindValue("id", $teacher->id);
 
             $stmt->execute();
@@ -133,8 +132,9 @@ class TeacherDao {
 
         // populate the fields
         $teacher->id = $row["id"];
+        //          Match class   match DB Column Name
         $teacher->teacher_name = $row["teacher_name"];
-        $teacher->teacher_image = $row["teacher_image"];
+        //$teacher->teacher_image = $row["teacher_image"];
         $teacher->teacher_phone = $row["teacher_phone"];
         $teacher->teacher_email = $row["teacher_email"];
         return $teacher;
@@ -145,9 +145,8 @@ class TeacherDao {
 // This class will be the model that represents the database table and html form
 // teacher is a reserved word..... need to name this class something else
 class Teacher {
-    public $id = NULL;
+    public $id = 0;
     public $teacher_name = "";
-    public $teacher_image = "";
     public $teacher_phone = "";
     public $teacher_email ="";
 

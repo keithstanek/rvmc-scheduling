@@ -49,7 +49,7 @@ class StudentDao {
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from student where student_id=:student_id";
+            $sql = "select * from student where id=:student_id";
             $stmt = $db->prepare($sql);
             $stmt->bindValue("student_id", $student_id);
             if ($stmt->execute()) {
@@ -71,6 +71,7 @@ class StudentDao {
     }
 
     public function insert($student) {
+    echo "student: <br>" . var_dump($student) . "<br><br>";
         $sql = "insert into student (first_name, last_name, DOB, parent_id) values (:first_name, :last_name, :DOB, :parent_id)";
         $db = DbUtil::getConnection();
         try {
@@ -91,7 +92,7 @@ class StudentDao {
     }
 
     public function update($student) {
-        $sql = "update student set first_name=:first_name, last_name=:last_name, DOB=:DOB, parent_id=:parent_id where student_id=:student_id";
+        $sql = "update student set first_name=:first_name, last_name=:last_name, DOB=:DOB, parent_id=:parent_id where id=:student_id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
@@ -112,7 +113,7 @@ class StudentDao {
     }
 
     public function delete($student) {
-        $sql = "delete from student where student_id=:student_id";
+        $sql = "delete from student where id=:student_id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
@@ -132,7 +133,7 @@ class StudentDao {
         $student = new Student();
 
         // populate the fields
-        $student->student_id = $row["student_id"];
+        $student->student_id = $row["id"];
         $student->first_name = $row["first_name"];
         $student->last_name = $row["last_name"];
         $student->DOB = $row["DOB"];
