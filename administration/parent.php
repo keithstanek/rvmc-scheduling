@@ -59,21 +59,21 @@ if ( str_contains($dbMessage, "ERROR") ) {
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="John" value="<?=$parent->firstName?>">
+                                    <input type="text" name="first_name" class="form-control" id="floatingInput1" placeholder="John" value="<?=$parent->firstName?>">
                                     <label for="floatingInput">First Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="<?=$parent->email?>">
+                                    <input type="email" name="email" class="form-control" id="floatingInput2" placeholder="name@example.com" value="<?=$parent->email?>">
                                     <label for="floatingInput">Email address</label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$parent->lastName?>">
+                                    <input type="text" name="last_name" class="form-control" id="floatingInput3" placeholder="Doe" value="<?=$parent->lastName?>">
                                     <label for="floatingInput">Last Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="phone" class="form-control" id="floatingInput" placeholder="123-456-7890" value="<?=$parent->phone?>">
+                                    <input type="text" name="phone" class="form-control" id="floatingInput4" placeholder="123-456-7890" value="<?=$parent->phone?>">
                                     <label for="floatingInput">Phone No.</label>
                                 </div>
                             </div>
@@ -90,7 +90,8 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 ?>
                                 <button type="submit" name="btnUpdate" value="update" class="btn btn-primary">Update</button>
                                 <button type="submit" name="btnDelete" value="delete" class="btn btn-warning">Delete</button>
-                                <?php
+                                <button type="submit" name="btnReset" value="reset" class="btn btn-danger" onclick="freset();">Reset</button>
+								<?php
                                 }
                                 ?>
                             </div>
@@ -112,7 +113,18 @@ if ( str_contains($dbMessage, "ERROR") ) {
             </div>
         </div>
     </div>
+	<Script>
+    //form reset function
+	function freset(){
 
+            document.getElementById("floatingInput1").value = "";   //parent form input fname
+            document.getElementById("floatingInput2").value = "";  //parent form input lname
+            document.getElementById("floatingInput3").value = "";  //parent form input email
+            document.getElementById("floatingInput4").value = "";  //parent form input phone
+            document.getElementById("pid").value = -1;
+
+          }
+    </script>
 
     <div class="row">
         <div class="col-12">

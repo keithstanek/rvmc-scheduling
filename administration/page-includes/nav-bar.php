@@ -15,9 +15,9 @@
                         </div>
                     </div>
                 </li>
-<!--                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="index.html" aria-expanded="false">-->
-<!--                        <i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span></a>-->
-<!--                </li>-->
+                    <!--                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="index.html" aria-expanded="false">-->
+                    <!--                        <i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Dashboard</span></a>-->
+                    <!--                </li>-->
                 <li class="sidebar-item">
                     <a class="sidebar-link waves-effect waves-dark sidebar-link" href="parent.php" aria-expanded="false">
                         <i class="mdi mdi-account-network"></i><span class="hide-menu">Parents</span>
@@ -31,6 +31,11 @@
                 <li class="sidebar-item">
                     <a class="sidebar-link waves-effect waves-dark sidebar-link" href="teacher.php" aria-expanded="false">
                         <i class="mdi mdi-account-network"></i><span class="hide-menu">Teachers</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="lesson.php" aria-expanded="false">
+                        <i class="mdi mdi-account-network"></i><span class="hide-menu">Lessons</span>
                     </a>
                 </li>
             </ul>

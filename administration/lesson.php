@@ -1,6 +1,6 @@
 <?php  
-$title = "Teacher Admin";
-$breadcrumb = "Teachers";
+$title = "Lesson Admin";
+$breadcrumb = "Lessons";
 
 require dirname(__FILE__) . "/page-includes/header.php";  
 require dirname(__FILE__) . "/page-includes/nav-bar.php";  
@@ -10,25 +10,23 @@ require dirname(__FILE__) . "/page-includes/page-wrapper-start.php";
 $dbMessage = "";
 $dbMessageBg = "bg-primary";
 $action = "insert"; // the default action for the page load
-$teacherDao = new TeacherDao();
+$lessonDao = new LessonDao();
 
-$teacher = new Teacher();
+$lesson = new Lesson();
 
 // check ternary operator --> true ? do this : else this;
-isset($_POST["id"]) ? $teacher->id = $_POST["id"] : $teacher->id = "";
-isset($_POST["teacher_name"]) ? $teacher->teacher_name = $_POST["teacher_name"] : $teacher->teacher_name = "";
-isset($_POST["teacher_email"]) ? $teacher->teacher_email = $_POST["teacher_email"] : $teacher->teacher_email = "";
-isset($_POST["phone"]) ? $teacher->teacher_phone = $_POST["phone"] : $teacher->teacher_phone = "";
+isset($_POST["id"]) ? $lesson->id = $_POST["id"] : $lesson->id = "";
+isset($_POST["Lesson_Name"]) ? $lesson->Lesson_Name = $_POST["Lesson_Name"] : $lesson->Lesson_Name = "";
+isset($_POST["Lesson_Type"]) ? $lesson->Lesson_Type = $_POST["Lesson_Type"] : $lesson->Lesson_Type = "";
 
 
 // if they submitted the form, take the values from above and insert/update/delete the record
 if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {
-    
-    $dbMessage = $teacherDao->insert($teacher);
+    $dbMessage = $lessonDao->insert($lesson);
 } else if ( isset($_POST["btnUpdate"]) && $_POST["btnUpdate"] == "update" ) {
-    $dbMessage = $teacherDao->update($teacher);
+    $dbMessage = $lessonDao->update($lesson);
 } else if ( isset($_POST["btnDelete"]) && $_POST["btnDelete"] == "delete" ) {
-    $dbMessage = $teacherDao->delete($teacher);
+    $dbMessage = $lessonDao->delete($lesson);
 }
 
 // if they came in through the link to update/delete, lets get the values from the database
@@ -36,8 +34,8 @@ if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {
 if ( isset($_GET["id"]) ) {
     $id = $_GET["id"];
 
-    // get the person data from the table
-    $teacher = $teacherDao->getTeacherById($id);
+    // get the lesson data from the table
+    $lesson = $lessonDao->getLessonByLessonID($id);
 }
 
 if ( str_contains($dbMessage, "ERROR") ) {
@@ -46,34 +44,29 @@ if ( str_contains($dbMessage, "ERROR") ) {
 ?>
 
 <div class="container-fluid">
-    <h2>Teacher Administration Page</h2>
+    <h2>Lesson Administration Page</h2>
 
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="teacher.php" method="post">
+                    <form action="lesson.php" method="post">
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="teacher_name" class="form-control" id="floatingInput1" placeholder="John" value="<?=$teacher->teacher_name?>">
-                                    <label for="floatingInput">Teacher Name</label>
+                                    <input type="text" name="Lesson_Name" class="form-control" id="floatingInput1" placeholder="John" value="<?=$lesson->Lesson_Name?>">
+                                    <label for="floatingInput">Lesson Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="email" name="teacher_email" class="form-control" id="floatingInput2" placeholder="name@example.com" value="<?=$teacher->teacher_email?>">
-                                    <label for="floatingInput">Email address</label>
+                                    <input type="text" name="Lesson_Type" class="form-control" id="floatingInput2" placeholder="Beginner, Intermediate, Advanced" value="<?=$lesson->Lesson_Type?>">
+                                    <label for="floatingInput">Lesson Type</label>
                                 </div>
-                                <div class="form-floating mb-3">
-                                    <input type="text" name="phone" class="form-control" id="floatingInput3" placeholder="123-456-7890" value="<?=$teacher->teacher_phone?>">
-                                    <label for="floatingInput">Phone No.</label>
-                                </div>
-                            </div>
-                        </div>
+							</div>
                         <div class="row">
                             <div class="col-12">
-                                <input type="hidden" name="id" value="<?=$teacher->id?>">
+                                <input type="hidden" name="id" value="<?=$lesson->id?>">
                                 <?php
-                                if ($teacher->id == "") {
+                                if ($lesson->id == "") {
                                 ?>
                                 <button type="submit" name="btnInsert" value="insert" class="btn btn-primary">Insert</button>
                                 <?php
@@ -82,7 +75,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 <button type="submit" name="btnUpdate" value="update" class="btn btn-primary">Update</button>
                                 <button type="submit" name="btnDelete" value="delete" class="btn btn-warning">Delete</button>
                                 <button type="submit" name="btnReset" value="reset" class="btn btn-danger" onclick="freset();">Reset</button>
-								<?php
+                                <?php
                                 }
                                 ?>
                             </div>
@@ -104,18 +97,18 @@ if ( str_contains($dbMessage, "ERROR") ) {
             </div>
         </div>
     </div>
-	<Script>
+	
+    <Script>
     //form reset function                                                                                       
     function freset(){
 
             document.getElementById("floatingInput1").value = "";   //parent form input fname
             document.getElementById("floatingInput2").value = "";  //parent form input lname
-            document.getElementById("floatingInput3").value = "";  //parent form input email
             document.getElementById("pid").value = -1;
 
           }
     </script>
-
+	
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -125,26 +118,24 @@ if ( str_contains($dbMessage, "ERROR") ) {
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Teacher Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Phone</th>
+                                    <th scope="col">Lesson Name</th>
+                                    <th scope="col">Lesson Type</th>
                                     <th scope="col">&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>
                             <?php
-                            $teachers = $teacherDao->getAllteachers();
+                            $lessons = $lessonDao->getAlllessons();
 
-                            foreach ($teachers as $teacher) {
+                            foreach ($lessons as $lesson) {
                             ?>
                                 <tr>
-                                    <th scope="row"><a href="teacher.php?id=<?=$teacher->id?>"><?= $teacher->id ?></a></th>
-                                    <td><?= $teacher->teacher_name ?></td>
-                                    <td><?= $teacher->teacher_email ?></td>
-                                    <td><?= $teacher->teacher_phone ?></td>
+                                    <td scope="row"><a href="lesson.php?id=<?=$lesson->id?>"><?= $lesson->id ?></a></td>
+                                    <td><?= $lesson->Lesson_Name ?></td>
+                                    <td><?= $lesson->Lesson_Type ?></td>
                                     <td>
-                                        <a href="teacher.php?id=<?=$teacher->id?>" class="fa fa-copy"></a> &nbsp;
-                                        <a href="teacher.php?id=<?=$teacher->id?>" class="fa fa-trash"></a>
+                                        <a href="lesson.php?id=<?=$lesson->id?>" class="fa fa-copy"></a> &nbsp;
+                                        <a href="lesson.php?id=<?=$lesson->id?>" class="fa fa-trash"></a>
 
                                     </td>
                                 </tr>

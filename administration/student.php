@@ -139,6 +139,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
           }
     </script>
 
+
     <div class="row">
         <div class="col-12">
             <div class="card">

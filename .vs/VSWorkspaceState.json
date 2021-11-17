@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\administration",
-    "\\classes"
+    "\\sql"
   ],
-  "SelectedNode": "\\classes\\test_dao.php",
+  "SelectedNode": "\\classes",
   "PreviewInSolutionExplorer": false
 }

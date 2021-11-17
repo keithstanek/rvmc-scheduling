@@ -71,7 +71,6 @@ class StudentDao {
     }
 
     public function insert($student) {
-    echo "student: <br>" . var_dump($student) . "<br><br>";
         $sql = "insert into student (first_name, last_name, DOB, parent_id) values (:first_name, :last_name, :DOB, :parent_id)";
         $db = DbUtil::getConnection();
         try {
