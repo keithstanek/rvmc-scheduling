@@ -67,6 +67,27 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <input type="text" name="phone" class="form-control" id="floatingInput3" placeholder="123-456-7890" value="<?=$teacher->teacher_phone?>">
                                     <label for="floatingInput">Phone No.</label>
                                 </div>
+                                <div class="form-floating mb-3">
+                                <select id="lessons" multiple name="lessonids">
+                                    <option value=""></option>    
+                                    <?php
+                                        $lessonDao = new LessonDao();
+                                        $lessons = $lessonDao->getAllLessons(); //loop through all lessons
+                                        foreach ($lessons as $lesson) {
+                                            $selected = "";
+                                            foreach($teacher->lessons as $l){          //searching for valid lesson selected under teacher
+                                                if($l->id==$lesson->id){      
+                                                    $selected = "selected";     //once selected is found break the loop
+                                                    break;
+                                                }
+                                            } 
+                                        ?>
+                                            <option <?=$selected ?> value="<?= $lesson->id ?>"> <?= $lesson->Lesson_Name ?></option>  
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -128,6 +149,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <th scope="col">Teacher Name</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Phone</th>
+                                    <th scope="col">Lessons Taught</th>
                                     <th scope="col">&nbsp;</th>
                                 </tr>
                             </thead>
@@ -142,6 +164,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <td><?= $teacher->teacher_name ?></td>
                                     <td><?= $teacher->teacher_email ?></td>
                                     <td><?= $teacher->teacher_phone ?></td>
+                                    <td><?= $teacher->teacher_lessons ?></td>
                                     <td>
                                         <a href="teacher.php?id=<?=$teacher->id?>" class="fa fa-copy"></a> &nbsp;
                                         <a href="teacher.php?id=<?=$teacher->id?>" class="fa fa-trash"></a>
