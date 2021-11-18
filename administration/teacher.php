@@ -68,7 +68,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <label for="floatingInput">Phone No.</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                <select id="lessons" multiple name="lessonids">
+                                <select id="lessons" multiple name="lessonids" class="form-control">
                                     <option value=""></option>    
                                     <?php
                                         $lessonDao = new LessonDao();
@@ -149,7 +149,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <th scope="col">Teacher Name</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Phone</th>
-                                    <th scope="col">Lessons Taught</th>
+                                    <th scope="col">Lessons Taught
                                     <th scope="col">&nbsp;</th>
                                 </tr>
                             </thead>
