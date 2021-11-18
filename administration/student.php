@@ -16,11 +16,11 @@ $studentDao = new StudentDao();
 $student = new Student();
 
 // check ternary operator --> true ? do this : else this;
-isset($_POST["id"]) ? $student->id = $_POST["id"] : $student->id = "";
-isset($_POST["first_name"]) ? $student->firstName = $_POST["first_name"] : $student->firstName = "";
-isset($_POST["last_name"]) ? $student->lastName = $_POST["last_name"] : $student->lastName = "";
-isset($_POST["email"]) ? $student->email = $_POST["email"] : $student->email = "";
-isset($_POST["phone"]) ? $student->phone = $_POST["phone"] : $student->phone = "";
+isset($_POST["id"]) ? $student->student_id = $_POST["id"] : $student->student_id = "";
+isset($_POST["firstname"]) ? $student->first_name = $_POST["firstname"] : $student->first_name = "";
+isset($_POST["lastname"]) ? $student->last_name = $_POST["lastname"] : $student->last_name = "";
+isset($_POST["DOB"]) ? $student->DOB = $_POST["DOB"] : $student->DOB = "";
+isset($_POST["ParentID"]) ? $student->parent_id = $_POST["ParentID"] : $student->parent_id = "";
 
 
 // if they submitted the form, take the values from above and insert/update/delete the record
@@ -59,30 +59,43 @@ if ( str_contains($dbMessage, "ERROR") ) {
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="John" value="<?=$student->firstName?>">
+                                    <input type="text" name="firstname" class="form-control" id="floatingInput1" placeholder="John" value="<?=$student->first_name?>">
                                     <label for="floatingInput">First Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="<?=$student->email?>">
-                                    <label for="floatingInput">Email address</label>
+                                    <input type="text" name="DOB" class="form-control" id="floatingInput2" placeholder="MM-DD-YYYY" value="<?=$student->DOB?>">
+                                    <label for="floatingInput">Date of Birth</label>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->lastName?>">
+                                    <input type="text" name="lastname" class="form-control" id="floatingInput3" placeholder="Doe" value="<?=$student->last_name?>">
                                     <label for="floatingInput">Last Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="phone" class="form-control" id="floatingInput" placeholder="123-456-7890" value="<?=$student->phone?>">
-                                    <label for="floatingInput">Phone No.</label>
+                                    <input type="text" name="ParentID" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->parent_id?>">
+                                    <label for="floatingInput">Parent</label>
+                                    <select id="parent" name="ParentID" value="<?= $parent->id ?>">
+                                    <option value=""></option>    
+                                    <?php
+                                        $parentsDao = new ParentDao();
+                                        $parents = $parentsDao->getAllParents();
+                                        foreach ($parents as $parent) {
+                                        $selected = ($parent->id == $student->parent_id) ? "selected" : ""; 
+                                        ?>
+                                            <option <?=$selected ?> value="<?= $parent->id ?>"><?= $parent->firstName ?> <?= $parent->lastName ?></option> 
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <input type="hidden" name="id" value="<?=$student->id?>">
+                                <input type="hidden" name="id" value="<?=$student->student_id?>">
                                 <?php
-                                if ($student->id == "") {
+                                if ($student->student_id == "") {
                                 ?>
                                 <button type="submit" name="btnInsert" value="insert" class="btn btn-primary">Insert</button>
                                 <?php
@@ -90,6 +103,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 ?>
                                 <button type="submit" name="btnUpdate" value="update" class="btn btn-primary">Update</button>
                                 <button type="submit" name="btnDelete" value="delete" class="btn btn-warning">Delete</button>
+                                <button type="submit" name="btnReset" value="reset" class="btn btn-danger" onclick="freset();">Reset</button>
                                 <?php
                                 }
                                 ?>
@@ -112,6 +126,18 @@ if ( str_contains($dbMessage, "ERROR") ) {
             </div>
         </div>
     </div>
+    <Script>
+    //form reset function                                                                                       
+    function freset(){
+
+            document.getElementById("floatingInput1").value = "";   //parent form input fname
+            document.getElementById("floatingInput2").value = "";  //parent form input lname
+            document.getElementById("floatingInput3").value = "";  //parent form input email
+            document.getElementById("parent").value = "";  //parent form input phone
+            document.getElementById("pid").value = -1;
+
+          }
+    </script>
 
 
     <div class="row">
@@ -125,8 +151,8 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <th scope="col">#</th>
                                     <th scope="col">First Name</th>
                                     <th scope="col">Last Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Phone</th>
+                                    <th scope="col">DOB</th>
+                                    <th scope="col">parent_id</th>
                                     <th scope="col">&nbsp;</th>
                                 </tr>
                             </thead>
@@ -137,14 +163,14 @@ if ( str_contains($dbMessage, "ERROR") ) {
                             foreach ($students as $student) {
                             ?>
                                 <tr>
-                                    <th scope="row"><a href="student.php?id=<?=$student->id?>"><?= $student->id ?></a></th>
-                                    <td><?= $student->firstName ?></td>
-                                    <td><?= $student->lastName ?></td>
-                                    <td><?= $student->email ?></td>
-                                    <td><?= $student->phone ?></td>
+                                    <td scope="row"><a href="student.php?id=<?=$student->student_id?>"><?= $student->student_id ?></a></td>
+                                    <td><?= $student->first_name ?></td>
+                                    <td><?= $student->last_name ?></td>
+                                    <td><?= $student->DOB ?></td>
+                                    <td><?= $student->parent_id ?></td>
                                     <td>
-                                        <a href="student.php?id=<?=$student->id?>" class="fa fa-copy"></a> &nbsp;
-                                        <a href="student.php?id=<?=$student->id?>" class="fa fa-trash"></a>
+                                        <a href="student.php?id=<?=$student->student_id?>" class="fa fa-copy"></a> &nbsp;
+                                        <a href="student.php?id=<?=$student->student_id?>" class="fa fa-trash"></a>
 
                                     </td>
                                 </tr>

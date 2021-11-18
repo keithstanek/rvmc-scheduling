@@ -1,6 +1,7 @@
 {
   "ExpandedNodes": [
     "",
+<<<<<<< HEAD
     "\\administration",
     "\\administration\\assets",
     "\\administration\\assets\\css",
@@ -12,5 +13,10 @@
     "\\sql"
   ],
   "SelectedNode": "\\administration\\page-includes\\header.php",
+=======
+    "\\sql"
+  ],
+  "SelectedNode": "\\classes",
+>>>>>>> adam
   "PreviewInSolutionExplorer": false
 }
