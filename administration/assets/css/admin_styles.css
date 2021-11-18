@@ -1,0 +1,189 @@
+html, body {
+	height: 100%;
+	background-color: #63738a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[class*="col-"] {
+  float: left;
+  padding: 15px;
+  border: 1px solid red;
+}
+
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.nav-center{
+	width:500px; 
+	margin:0 auto;
+}
+.nav-right{
+	float: right;
+}
+
+.hero-image {
+  background: url('../img/music.jpeg') no-repeat center top;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.hero-image2 {
+  background: url('../img/music2.jpeg') no-repeat center top;
+  background-size: cover;
+}
+
+.hero-image3 {
+  background: url('../img/mic.jpeg') no-repeat center top;
+  background-size: cover;
+}
+.hero-image4 {
+  background: url('../img/Piano.jpeg') no-repeat center top;
+  background-size: cover;
+}
+
+.card-heading{
+	color:white;
+	font-size: 2em;
+	align: center;
+}
+.card-body{
+	color: white;
+	font-size: 20px;
+	
+	
+}
+
+
+
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+
+
+label {
+    display: block;
+    font: 1rem 'Fira Sans', sans-serif;
+}
+
+input,
+label {
+    margin: .4rem 0;
+}
+
+
+#page-container {
+  position: relative;
+  min-height: 100vh;
+  background-color: #63738a;
+}
+
+#content-wrap {
+  padding-bottom: 10rem;    /* Footer height */
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 3.5rem;            /* Footer height */
+}
+
+#wrapper{
+	height: 600px;
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100px;
+	
+}
+
+
+
+
+:root {
+  --gradient: linear-gradient(to left top, #DD2476 10%, #FF512F 90%) !important;
+}
+
+.card {
+  background: #222;
+  border: 1px solid #dd2476;
+  color: rgba(250, 250, 250, 0.8);
+  margin-bottom: 2rem;
+}
+
+.btn {
+  border: 5px solid;
+  border-image-slice: 1;
+  background: var(--gradient) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  border-image-source:  var(--gradient) !important; 
+  text-decoration: none;
+  transition: all .4s ease;
+}
+
+.btn:hover, .btn:focus {
+      background: var(--gradient) !important;
+  -webkit-background-clip: none !important;
+  -webkit-text-fill-color: #fff !important;
+  border: 5px solid #fff !important; 
+  box-shadow: #222 1px 0 10px;
+  text-decoration: underline;
+}
+
+// Code for "regular" computer screens
+
+/*------------------------------------*\
+    $SMALL COMPUTER SCREENS
+\*------------------------------------*/
+ @media all and (max-width: 1034px) {
+
+}
+
+/*------------------------------------*\
+    $IPAD AND TABLET
+\*------------------------------------*/
+
+@media only screen and (max-width: 975px) {
+.nav-right{
+		float:left;
+	}
+}
+
+/*------------------------------------*\
+    $IPHONE 4S LANDSCAPE
+\*------------------------------------*/
+
+@media only screen and (max-width : 500px) {
+	.nav-right{
+		float:left;
+		
+	}
+	
+	background: url('../img/music.jpeg') no-repeat center top;
+	background: url('../img/music2.jpeg') no-repeat center top;
+	background: url('../img/mic.jpeg') no-repeat center top;
+	background: url('../img/piano.jpeg') no-repeat center top;
+}
+}
+
+/*------------------------------------*\
+    $IHPONE 4S
+\*------------------------------------*/
+
+@media only screen and (max-width : 320px) {
+
+}
