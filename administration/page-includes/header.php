@@ -51,7 +51,7 @@
                 </ul>
                 <ul class="navbar-nav float-end">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="../admin-login.html" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="assets/img/users/1.jpg" alt="user" class="rounded-circle" width="31">
                         </a>
                     </li>

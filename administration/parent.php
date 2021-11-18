@@ -73,18 +73,17 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <label for="floatingInput3">Last Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="phone" class="form-control" id="floatingInput4" placeholder="123-456-7890" value="<?=$parent->phone?>">
+                                    <input type="tel" name="phone" class="form-control" id="phone" placeholder="123-456-7890" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" value="<?=$parent->phone?>">
                                                                         
-                                    <label for="floatingInput4">Phone No.</label>
+                                    <label for="phone">Phone No.</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <input type="hidden" name="id" value="<?=$parent->id?>">
-                                
-                                <?php
-                                if ($parent->id == "") {
+                                <input type="hidden" name="id" id="pid" value="<?=$parent->id?>">
+                                <?php                                
+                                if ($parent->id == "" || $parent->id < 0) {
                                 ?>
                                 <button type="submit" name="btnInsert" value="insert" class="btn btn-primary" >Insert</button>
                                 <?php
@@ -93,11 +92,10 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 ?>
                                 <button type="submit" name="btnUpdate" value="update" class="btn btn-primary">Update</button>
                                 <button type="submit" name="btnDelete" value="delete" class="btn btn-warning">Delete</button>
-                                <button type="submit" name="btnReset" value="reset" class="btn btn-danger" onclick="confirmation();">Reset</button>
-                                
-                            </div>
+                                <button type="submit" name="btnReset" value="reset" class="btn btn-danger" onclick="freset();">Reset</button>
+                                </div>
                         </div>
-                        <?php
+                        <?php     
                         }
                         if ($dbMessage != "") {
                         ?>
@@ -165,13 +163,16 @@ if ( str_contains($dbMessage, "ERROR") ) {
 
 <script>
 
-function confirmation(){
-			document.getElementById("floatingInput").value = "";
-		    document.getElementById("floatingInput2").value = "";
-            document.getElementById("floatingInput3").value = "";
-            document.getElementById("floatingInput4").value = "";
+function freset(){
             
-    }
+            
+			document.getElementById("floatingInput").value = "";   //parent form input fname
+		    document.getElementById("floatingInput2").value = "";  //parent form input lname
+            document.getElementById("floatingInput3").value = "";  //parent form input email
+            document.getElementById("phone").value = "";  //parent form input phone
+            document.getElementById("pid").value = -1;
+            
+          }
 </script>
 
 <?php  require dirname(__FILE__) . "/page-includes/footer.php";  ?>

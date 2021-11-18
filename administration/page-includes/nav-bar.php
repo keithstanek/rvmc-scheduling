@@ -33,6 +33,11 @@
                         <i class="mdi mdi-account-network"></i><span class="hide-menu">Teachers</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="lesson_type.php" aria-expanded="false">
+                        <i class="mdi mdi-border-all"></i><span class="hide-menu">Lesson Type</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>
