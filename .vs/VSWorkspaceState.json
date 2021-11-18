@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\administration",
+    "\\administration\\assets",
+    "\\administration\\assets\\css",
+    "\\administration\\assets\\css\\custom_css",
+    "\\administration\\assets\\css\\icons",
+    "\\administration\\assets\\css\\icons\\font-awesome",
+    "\\administration\\assets\\css\\icons\\material-design-iconic-font",
+    "\\administration\\assets\\css\\icons\\material-design-iconic-font\\css",
+    "\\sql"
+  ],
+  "SelectedNode": "\\administration\\page-includes\\header.php",
+  "PreviewInSolutionExplorer": false
+}

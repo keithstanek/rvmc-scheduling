@@ -8,7 +8,11 @@ class Constants {
 
   public static $DATABASE_HOST     = "localhost";
   public static $DATABASE_USERNAME = "root";
+<<<<<<< HEAD
   public static $DATABASE_PASSWORD = "root";
+=======
+  public static $DATABASE_PASSWORD = "password";
+>>>>>>> develop
   public static $DATABASE_NAME     = "rvmc";
 
 //  public static $DATABASE_HOST     = "db5004907070.hosting-data.io";
