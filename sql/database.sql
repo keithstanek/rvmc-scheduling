@@ -1,34 +1,50 @@
-CREATE TABLE `rvmc`.`lesson` (
-  `lessonID` INT NOT NULL AUTO_INCREMENT,
-  `Lesson_Name` VARCHAR(45) NULL,
-  `Lesson_Type` VARCHAR(45) NULL,
-  PRIMARY KEY (`lessonID`));
+CREATE TABLE `checkin` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  `checkin_date` timestamp(2) NULL DEFAULT NULL,
+  `instructor` varchar(45) DEFAULT NULL,
+  `instrument` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
 
-CREATE TABLE `rvmc`.`teacher` (
-  `TeacherID` INT NOT NULL AUTO_INCREMENT,
-  `teacher_name` VARCHAR(45) NULL,
-  `teacher_image` VARCHAR(45) NULL,
-  `teacher_phone` VARCHAR(45) NULL,
-  PRIMARY KEY (`TeacherID`));
+CREATE TABLE `lesson` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `Lesson_Name` varchar(45) DEFAULT NULL,
+  `Lesson_Type` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
 
-CREATE TABLE `rvmc`.`parent` (
-  `parent_id` INT NOT NULL AUTO_INCREMENT,
-  `first_name` VARCHAR(45) NULL,
-  `last_name` VARCHAR(45) NULL,
-  `email` VARCHAR(45) NULL,
-  `phone` INT(10) NULL,
-  PRIMARY KEY (`parent_id`));
+CREATE TABLE `parent` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `phone` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
 
-CREATE TABLE `rvmc`.`student` (
-  `student_id` INT NOT NULL AUTO_INCREMENT,
-  `first_name` VARCHAR(45) NULL,
-  `last_name` VARCHAR(45) NULL,
-  `DOB` DATE NULL,
-  `parent_id` INT NULL,
-  PRIMARY KEY (`student_id`),
-  INDEX `parent_id_idx` (`parent_id` ASC) VISIBLE,
-  CONSTRAINT `parent_id`
-    FOREIGN KEY (`parent_id`)
-    REFERENCES `rvmc`.`parent` (`parent_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+CREATE TABLE `student` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  `DOB` varchar(12) DEFAULT NULL,
+  `parent_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `parent_id_idx` (`parent_id`),
+  CONSTRAINT `parent_id` FOREIGN KEY (`parent_id`) REFERENCES `parent` (`id`)
+);
+
+CREATE TABLE `teacher` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `teacher_name` varchar(45) DEFAULT NULL,
+  `teacher_image` varchar(45) DEFAULT NULL,
+  `teacher_phone` varchar(45) DEFAULT NULL,
+  `teacher_email` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `teacher_lesson` (
+  `teacherid` int NOT NULL,
+  `lessonid` int DEFAULT NULL
+);

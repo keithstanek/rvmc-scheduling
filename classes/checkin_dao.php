@@ -1,27 +1,14 @@
 <?php
-/**
- *
- * SQL To Create the Parent Table
 
-CREATE TABLE `lesson` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `Lesson_Name` VARCHAR(45) NULL,
-  `Lesson_Type` VARCHAR(45) NULL,
-PRIMARY KEY (`id`));
+class CheckinDao {
 
- * If there are table changes, add the alter statements below. Make sure they are
- * in the order they should be executed in!!
- */
-
-class LessonDao {
-
-    public function getAllLessons() {
+    public function getAllCheckins() {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from lesson";
+            $sql = "select * from checkin";
             $stmt = $db->prepare($sql);
             if ($stmt->execute()) {
                 // loop through the results from the database
@@ -41,15 +28,15 @@ class LessonDao {
         return $records;
     }
 
-    public function getLessonByLessonID($id) {
+    public function getCheckinByDate($id) {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from lesson where id=:id";
+            $sql = "select * from lesson where checkin_date ???";
             $stmt = $db->prepare($sql);
-            $stmt->bindValue("id", $id);
+            $stmt->bindValue("checkin_date", $c_date);
             if ($stmt->execute()) {
                 // loop through the results from the database
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -68,14 +55,17 @@ class LessonDao {
         return $records[0];
     }
 
-    public function insert($lesson) {
-        $sql = "insert into lesson (Lesson_Name, Lesson_Type) values (:Lesson_Name, :Lesson_Type)";
+    public function insert($checkin) {
+        $sql = "insert into checkin (fist_name, last_name, checkin_date, instructor, instrument values (:f_name, :l_name, :checkin_date, :instruct, :instrum)";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("Lesson_Name", $lesson->Lesson_Name);
-            $stmt->bindValue("Lesson_Type", $lesson->Lesson_Type);
+            $stmt->bindValue("first_name", $checkin->f_name);
+            $stmt->bindValue("last_name", $checkin->l_name);
+            $stmt->bindValue("checkin_date", $checkin->checkin_date);
+            $stmt->bindValue("instructor", $checkin->instruct);
+            $stmt->bindValue("instrument", $checkin->instrum);
 
             $stmt->execute();
             $db = null;
@@ -86,44 +76,8 @@ class LessonDao {
         }
     }
 
-    public function update($lesson) {
-        $sql = "update lesson set Lesson_Name=:Lesson_Name, Lesson_Type=:Lesson_Type where id=:id";
-        $db = DbUtil::getConnection();
-        try {
-            $stmt = $db->prepare($sql);
-
-            $stmt->bindValue("Lesson_Name", $lesson->Lesson_Name);
-            $stmt->bindValue("Lesson_Type", $lesson->Lesson_Type);
-            $stmt->bindValue("id", $lesson->id);
-
-            $stmt->execute();
-            $db = null;
-
-            return "Update Successful";
-        } catch (PDOException $e) {
-            return "ERROR: " . $e->getMessage();
-        }
-    }
-
-    public function delete($lesson) {
-        $sql = "delete from lesson where id=:id";
-        $db = DbUtil::getConnection();
-        try {
-            $stmt = $db->prepare($sql);
-
-            $stmt->bindValue("id", $lesson->id);
-
-            $stmt->execute();
-            $db = null;
-
-            return "Delete Successful";
-        } catch (PDOException $e) {
-            return "ERROR: " . $e->getMessage();
-        }
-    }
-
     private function setRowValue($row) {
-        $lesson = new Lesson();
+        $checkin = new checkin();
 
         // populate the fields
         $lesson->id = $row["id"];
@@ -137,10 +91,13 @@ class LessonDao {
 
 // This class will be the model that represents the database table and html form
 // Parent is a reserved word..... need to name this class something else
-class Lesson {
+class checkin {
     public $id = 0;
-    public $Lesson_Name = "";
-    public $Lesson_Type = "";
+    public $checkin->f_name;
+    public $checkin->l_name = "";
+    public $checkin->checkin_date;
+    public $checkin->instructor;
+    public $checkin->instrument;
 
     // if the above fields were private, you would use the two methods below
     // to get and set the value of the property *** We just call the varibles
