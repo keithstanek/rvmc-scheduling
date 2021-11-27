@@ -145,7 +145,6 @@ if ( str_contains($dbMessage, "ERROR") ) {
                             <tbody>
                             <?php
                             $parents = $parentDao->getAllParents();
-
                             foreach ($parents as $parent) {
                             ?>
                                 <tr>

@@ -11,24 +11,34 @@ $dbMessage = "";
 $dbMessageBg = "bg-primary";
 $action = "insert"; // the default action for the page load
 $teacherDao = new TeacherDao();
-
 $teacher = new Teacher();
+
+$lessonDao = new LessonDao();
+$lesson = new Lesson();
+
+$teacher_lesson_Dao = new Teacher_Lesson_Dao;
+$teacher_lesson = new Teacher_Lesson();
 
 // check ternary operator --> true ? do this : else this;
 isset($_POST["id"]) ? $teacher->id = $_POST["id"] : $teacher->id = "";
 isset($_POST["teacher_name"]) ? $teacher->teacher_name = $_POST["teacher_name"] : $teacher->teacher_name = "";
 isset($_POST["teacher_email"]) ? $teacher->teacher_email = $_POST["teacher_email"] : $teacher->teacher_email = "";
 isset($_POST["phone"]) ? $teacher->teacher_phone = $_POST["phone"] : $teacher->teacher_phone = "";
-
+isset($_POST["id"]) ? $teacher_lesson->teacherid = $_POST["id"] : $teacher_lesson->teacherid = "";
+isset($_POST["lessonids"]) ? $teacher_lesson->lessonid = $_POST["lessonids"] : $teacher_lesson->lessonid = "";
 
 // if they submitted the form, take the values from above and insert/update/delete the record
 if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {
     
     $dbMessage = $teacherDao->insert($teacher);
+	$dbMessage = $teacher_lesson_Dao->insert($teacher_lesson);
 } else if ( isset($_POST["btnUpdate"]) && $_POST["btnUpdate"] == "update" ) {
     $dbMessage = $teacherDao->update($teacher);
+	$dbMessage = $teacher_lesson_Dao->update($teacher_lesson);
 } else if ( isset($_POST["btnDelete"]) && $_POST["btnDelete"] == "delete" ) {
     $dbMessage = $teacherDao->delete($teacher);
+		$teacher_lesson->teacherid = null;
+	$dbMessage = $teacher_lesson_Dao->update($teacher_lesson);
 }
 
 // if they came in through the link to update/delete, lets get the values from the database
@@ -61,31 +71,27 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="email" name="teacher_email" class="form-control" id="floatingInput2" placeholder="name@example.com" value="<?=$teacher->teacher_email?>">
-                                    <label for="floatingInput">Email address</label>
+                                    <label for="floatingInput">Email Address</label>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" name="phone" class="form-control" id="floatingInput3" placeholder="123-456-7890" value="<?=$teacher->teacher_phone?>">
                                     <label for="floatingInput">Phone No.</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                <select id="lessons" multiple name="lessonids" class="form-control">
-                                    <option value=""></option>    
+                                <select style="margin:0px; padding:0px; height:125px;" id="lessons" multiple name="lessonids" class="form-control">
+                                    <option style="margin:5px; margin-bottom:2.5px;" selected value=""></option>    
                                     <?php
-                                        $lessonDao = new LessonDao();
-                                        $lessons = $lessonDao->getAllLessons(); //loop through all lessons
-                                        foreach ($lessons as $lesson) {
-                                            $selected = "";
-                                            foreach($teacher->lessons as $l){          //searching for valid lesson selected under teacher
-                                                if($l->id==$lesson->id){      
-                                                    $selected = "selected";     //once selected is found break the loop
-                                                    break;
-                                                }
-                                            } 
+									$lessons = $lessonDao->getAllLessons();
+									$teachers = $teacherDao->getAllTeachers();
+									
+									foreach($lessons as $l){?>
+										<option style="margin:5px; margin-bottom:2.5px;" value="<?$l->id?>"><?= $l->Lesson_Name;?>&emsp;&emsp;&emsp;-&emsp;&emsp;&emsp;<?=$l->Lesson_Type ?> </option><?
+									}									
                                         ?>
-                                            <option <?=$selected ?> value="<?= $lesson->id ?>"> <?= $lesson->Lesson_Name ?></option>  
+                                             
                                         <?php
                                         }
-                                        ?>
+                                      ?>								
                                     </select>
                                 </div>
                             </div>

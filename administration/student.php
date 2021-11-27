@@ -75,7 +75,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 <div class="form-floating mb-3">
                                     <input type="text" name="ParentID" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->parent_id?>">
                                     <label for="floatingInput">Parent</label>
-                                    <select id="parent" name="ParentID" value="<?= $parent->id ?>">
+                                    <select id="parent" name="ParentID" value="<? $parent->id ?>">
                                     <option value=""></option>    
                                     <?php
                                         $parentsDao = new ParentDao();
