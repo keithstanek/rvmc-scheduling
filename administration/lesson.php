@@ -104,7 +104,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
 
             document.getElementById("floatingInput1").value = "";   //parent form input fname
             document.getElementById("floatingInput2").value = "";  //parent form input lname
-            document.getElementById("pid").value = -1;
+            document.getElementById("id").value = -1;
 
           }
     </script>

@@ -20,7 +20,7 @@ CREATE TABLE `parent` (
   `first_name` varchar(45) DEFAULT NULL,
   `last_name` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
-  `phone` int DEFAULT NULL,
+  `phone` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
