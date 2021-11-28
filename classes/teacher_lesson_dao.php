@@ -164,8 +164,8 @@ class Teacher_Lesson_Dao {
 // This class will be the model that represents the database table and html form
 // teacher is a reserved word..... need to name this class something else
 class Teacher_Lesson {
-    public $teacherid = null;
-    public $lessonid = null;
+    public $teacherid = 0;
+    public $lessonid = 0;
 
     // if the above fields were private, you would use the two methods below
     // to get and set the value of the property *** We just call the varibles

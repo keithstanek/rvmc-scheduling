@@ -10,6 +10,7 @@ require dirname(__FILE__) . "/page-includes/page-wrapper-start.php";
 $dbMessage = "";
 $dbMessageBg = "bg-primary";
 $action = "insert"; // the default action for the page load
+
 $teacherDao = new TeacherDao();
 $teacher = new Teacher();
 
@@ -28,17 +29,15 @@ isset($_POST["id"]) ? $teacher_lesson->teacherid = $_POST["id"] : $teacher_lesso
 isset($_POST["lessonids"]) ? $teacher_lesson->lessonid = $_POST["lessonids"] : $teacher_lesson->lessonid = "";
 
 // if they submitted the form, take the values from above and insert/update/delete the record
-if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {
-    
+if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {    
     $dbMessage = $teacherDao->insert($teacher);
 	$dbMessage = $teacher_lesson_Dao->insert($teacher_lesson);
+	echo $teacher_lesson->teacherid, $teacher_lesson->lessonid;
 } else if ( isset($_POST["btnUpdate"]) && $_POST["btnUpdate"] == "update" ) {
     $dbMessage = $teacherDao->update($teacher);
 	$dbMessage = $teacher_lesson_Dao->update($teacher_lesson);
 } else if ( isset($_POST["btnDelete"]) && $_POST["btnDelete"] == "delete" ) {
-    $dbMessage = $teacherDao->delete($teacher);
-		$teacher_lesson->teacherid = null;
-	$dbMessage = $teacher_lesson_Dao->update($teacher_lesson);
+	$dbMessage = $teacherDao->delete($teacher);
 }
 
 // if they came in through the link to update/delete, lets get the values from the database
@@ -78,17 +77,16 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <label for="floatingInput">Phone No.</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                <select style="margin:0px; padding:0px; height:125px;" id="lessons" multiple name="lessonids" class="form-control">
-                                    <option style="margin:5px; margin-bottom:2.5px;" selected value=""></option>    
+                                <select style="margin:0px; padding:0px; height:125px;" name="lessonids" id="lessons" multiple class="form-control">
+                                    <option style="margin:5px; margin-bottom:2.5px;" value=""></option>    
                                     <?php
 									$lessons = $lessonDao->getAllLessons();
 									$teachers = $teacherDao->getAllTeachers();
 									
 									foreach($lessons as $l){?>
-										<option style="margin:5px; margin-bottom:2.5px;" value="<?$l->id?>"><?= $l->Lesson_Name;?>&emsp;&emsp;&emsp;-&emsp;&emsp;&emsp;<?=$l->Lesson_Type ?> </option><?
+										<option style="margin:5px; margin-bottom:2.5px;" value=<?=$l->id?>><?= $l->Lesson_Name;?> - <?=$l->Lesson_Type; ?> </option><?
 									}									
-                                        ?>
-                                             
+                                    ?>   
                                         <?php
                                         }
                                       ?>								
@@ -163,17 +161,17 @@ if ( str_contains($dbMessage, "ERROR") ) {
                             <?php
                             $teachers = $teacherDao->getAllteachers();
 
-                            foreach ($teachers as $teacher) {
+                            foreach ($teachers as $t) {
                             ?>
                                 <tr>
-                                    <th scope="row"><a href="teacher.php?id=<?=$teacher->id?>"><?= $teacher->id ?></a></th>
-                                    <td><?= $teacher->teacher_name ?></td>
-                                    <td><?= $teacher->teacher_email ?></td>
-                                    <td><?= $teacher->teacher_phone ?></td>
-                                    <td><?= $teacher->teacher_lessons ?></td>
+                                    <th scope="row"><a href="teacher.php?id=<?=$t->id?>"><?= $t->id ?></a></th>
+                                    <td><?= $t->teacher_name ?></td>
+                                    <td><?= $t->teacher_email ?></td>
+                                    <td><?= $t->teacher_phone ?></td>
+                                    <td><?= $t->teacher_lessons ?></td>
                                     <td>
-                                        <a href="teacher.php?id=<?=$teacher->id?>" class="fa fa-copy"></a> &nbsp;
-                                        <a href="teacher.php?id=<?=$teacher->id?>" class="fa fa-trash"></a>
+                                        <a href="teacher.php?id=<?=$t->id?>" class="fa fa-copy"></a> &nbsp;
+                                        <a href="teacher.php?id=<?=$t->id?>" class="fa fa-trash"></a>
 
                                     </td>
                                 </tr>
