@@ -30,12 +30,9 @@ isset($_POST["lessonids"]) ? $teacher_lesson->lessonid = $_POST["lessonids"] : $
 
 // if they submitted the form, take the values from above and insert/update/delete the record
 if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {    
-    $dbMessage = $teacherDao->insert($teacher);
-	$dbMessage = $teacher_lesson_Dao->insert($teacher_lesson);
-	echo $teacher_lesson->teacherid, $teacher_lesson->lessonid;
+    $dbMessage = $teacherDao->insert($teacher, $teacher_lesson);
 } else if ( isset($_POST["btnUpdate"]) && $_POST["btnUpdate"] == "update" ) {
-    $dbMessage = $teacherDao->update($teacher);
-	$dbMessage = $teacher_lesson_Dao->update($teacher_lesson);
+    $dbMessage = $teacherDao->update($teacher, $teacher_lesson);
 } else if ( isset($_POST["btnDelete"]) && $_POST["btnDelete"] == "delete" ) {
 	$dbMessage = $teacherDao->delete($teacher);
 }
@@ -77,20 +74,30 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <label for="floatingInput">Phone No.</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                <select style="margin:0px; padding:0px; height:125px;" name="lessonids" id="lessons" multiple class="form-control">
-                                    <option style="margin:5px; margin-bottom:2.5px;" value=""></option>    
+                                
+                                <select style="margin:0px; padding:0px; height:125px;" name="lessonids[]" id="lessons" multiple class="form-control">
                                     <?php
 									$lessons = $lessonDao->getAllLessons();
 									$teachers = $teacherDao->getAllTeachers();
-									
-									foreach($lessons as $l){?>
-										<option style="margin:5px; margin-bottom:2.5px;" value=<?=$l->id?>><?= $l->Lesson_Name;?> - <?=$l->Lesson_Type; ?> </option><?
+									$teacher_lessons = $teacher_lesson_Dao->getLessonByTeacherId($teacher->id);
+
+									foreach($lessons as $l){
+                                        $selected = "";
+                                        foreach($teacher_lessons as $tls){  
+                                            if($tls->lessonid == $l->id){
+                                                $selected = "selected";
+                                                break;
+                                            }
+                                       }
+                                    ?>
+										<option <?=$selected?> style="margin:5px; margin-bottom:2.5px;" value=<?=$l->id?>><?= $l->Lesson_Name;?> - <?=$l->Lesson_Type; ?> </option><?
 									}									
                                     ?>   
-                                        <?php
+                                    <?php
                                         }
-                                      ?>								
-                                    </select>
+                                    ?>								
+                                </select>
+
                                 </div>
                             </div>
                         </div>
@@ -160,6 +167,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                             <tbody>
                             <?php
                             $teachers = $teacherDao->getAllteachers();
+							$teacher_lessons = $teacher_lesson_Dao->getAllTeacherLessons();
 
                             foreach ($teachers as $t) {
                             ?>

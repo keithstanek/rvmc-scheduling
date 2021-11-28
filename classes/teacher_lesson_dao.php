@@ -3,13 +3,10 @@
  *
  * SQL To Create the teacher Table
 
-CREATE TABLE `teacher` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `teacher_name` VARCHAR(45) NULL,
-  `teacher_image` VARCHAR(45) NULL,
-  `teacher_phone` VARCHAR(45) NULL,
-PRIMARY KEY (`id`));
-
+CREATE TABLE `teacher_lesson` (
+  `teacherid` int NOT NULL,
+  `lessonid` int DEFAULT NULL
+)
  * If there are table changes, add the alter statements below. Make sure they are
  * in the order they should be executed in!!
  */
@@ -75,7 +72,7 @@ class Teacher_Lesson_Dao {
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select lessonid from teacher_lesson where teacherid=:id";
+            $sql = "select teacherid, lessonid from teacher_lesson where teacherid=:id";
             $stmt = $db->prepare($sql);
             $stmt->bindValue("id", $id);
             if ($stmt->execute()) {
@@ -93,17 +90,17 @@ class Teacher_Lesson_Dao {
         }
 
         // return the array back to the function
-        return $records[0];
+        return $records;
     }
 	
-    public function insert($teacher_lesson) {
+    public function insert($teacherid, $lessonid) {
         $sql = "insert into teacher_lesson (teacherid, lessonid) values (:teacherid, :lessonid);";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("teacherid", $teacher_lesson->teacherid);
-			$stmt->bindValue("lessonid", $teacher_lesson->lessonid);
+            $stmt->bindValue("teacherid", $teacherid);
+			$stmt->bindValue("lessonid", $lessonid);
 
             $stmt->execute();
             $db = null;
@@ -139,7 +136,24 @@ class Teacher_Lesson_Dao {
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("id", $teacher_lesson->id);
+            $stmt->bindValue("tid", $teacher_lesson->id);
+
+            $stmt->execute();
+            $db = null;
+
+            return "Delete Successful";
+        } catch (PDOException $e) {
+            return "ERROR: " . $e->getMessage();
+        }
+    }
+
+    public function deleteByTeacherID($teacherid) {
+        $sql = "delete from teacher_lesson where teacherid=:tid";
+        $db = DbUtil::getConnection();
+        try {
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue("tid", $teacherid);
 
             $stmt->execute();
             $db = null;
@@ -151,7 +165,7 @@ class Teacher_Lesson_Dao {
     }
 
     private function setRowValue($row) {
-        $teacher_lesson = new teacher_lesson();
+        $teacher_lesson = new Teacher_Lesson();
 
         // populate the fields
         $teacher_lesson->teacherid = $row["teacherid"];

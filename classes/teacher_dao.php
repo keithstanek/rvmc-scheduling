@@ -69,7 +69,7 @@ class TeacherDao {
         return $records[0];
     }
 
-    public function insert($teacher) {
+    public function insert($teacher, $teacher_lesson) {
         $sql = "insert into teacher (teacher_name, teacher_email, teacher_phone) values (:teacher_name, :teacher_email, :teacher_phone)";
         $db = DbUtil::getConnection();
         try {
@@ -79,8 +79,15 @@ class TeacherDao {
             //$stmt->bindValue("teacher_image", $teacher->teacher_image);
             $stmt->bindValue("teacher_phone", $teacher->teacher_phone);
             $stmt->bindValue("teacher_email", $teacher->teacher_email);
-
             $stmt->execute();
+
+           $teacherid = $db->lastInsertId();
+
+            $teacher_lesson_Dao = new Teacher_Lesson_Dao();
+                foreach($teacher_lesson->lessonid as $id) {
+                    $teacher_lesson_Dao->insert($teacherid, $id);
+                }
+
             $db = null;
             
             return "Insert Successful";
@@ -90,7 +97,7 @@ class TeacherDao {
         }
     }
 
-    public function update($teacher) {
+    public function update($teacher, $teacher_lesson) {
         $sql = "update teacher set teacher_name=:t_name, teacher_phone=:t_phone, teacher_email=:t_email where id=:id";
         $db = DbUtil::getConnection();
         try {
@@ -100,8 +107,14 @@ class TeacherDao {
             $stmt->bindValue("t_phone", $teacher->teacher_phone);
             $stmt->bindValue("t_email", $teacher->teacher_email);
             $stmt->bindValue("id", $teacher->id);
-
             $stmt->execute();
+
+            $teacher_lesson_Dao = new Teacher_Lesson_Dao();
+            $teacher_lesson_Dao->deleteByTeacherID($teacher->id);
+                foreach($teacher_lesson->lessonid as $id) {
+                    $teacher_lesson_Dao->insert($teacher->id, $id);                   
+                }
+
             $db = null;
 
             return "Update Successful";
