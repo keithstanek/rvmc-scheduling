@@ -119,7 +119,7 @@ if (isset($_POST["btnsubmit"]) ) {
 		</button></div>
 		  <div class="column"  style="width: 50%;"><input id="instructor" name="instructor" type="text" class="field left" style="text-align: center; border-radius: 4px; background-color: #C6C6C6" readonly value="<?=$checkin->instructor?>"></div>
 		</div>
-            <input type="hidden" name="instructor_id" value="">
+            <input type="hidden" name="instructor_id" id="instructor_id" value="">
 			
 		<select id="instrument" name="instrument" class="selectpicker selector">
 		  <optgroup label="Instrument">
