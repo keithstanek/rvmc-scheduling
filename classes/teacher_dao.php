@@ -4,10 +4,10 @@
  * SQL To Create the teacher Table
 
 CREATE TABLE `teacher` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `teacher_name` VARCHAR(45) NULL,
-  `teacher_image` VARCHAR(45) NULL,
-  `teacher_phone` VARCHAR(45) NULL,
+`id` INT NOT NULL AUTO_INCREMENT,
+`teacher_name` VARCHAR(45) NULL,
+`teacher_image` VARCHAR(45) NULL,
+`teacher_phone` VARCHAR(45) NULL,
 PRIMARY KEY (`id`));
 
  * If there are table changes, add the alter statements below. Make sure they are
@@ -81,18 +81,18 @@ class TeacherDao {
             $stmt->bindValue("teacher_email", $teacher->teacher_email);
             $stmt->execute();
 
-           $teacherid = $db->lastInsertId();
+            $teacherid = $db->lastInsertId();
 
             $teacher_lesson_Dao = new Teacher_Lesson_Dao();
-                foreach($teacher_lesson->lessonid as $id) {
-                    $teacher_lesson_Dao->insert($teacherid, $id);
-                }
+            foreach($teacher_lesson->lessonid as $id) {
+                $teacher_lesson_Dao->insert($teacherid, $id);
+            }
 
             $db = null;
-            
+
             return "Insert Successful";
-            }
-            catch (PDOException $e) {
+        }
+        catch (PDOException $e) {
             return "ERROR: " . $e->getMessage();
         }
     }
@@ -111,9 +111,9 @@ class TeacherDao {
 
             $teacher_lesson_Dao = new Teacher_Lesson_Dao();
             $teacher_lesson_Dao->deleteByTeacherID($teacher->id);
-                foreach($teacher_lesson->lessonid as $id) {
-                    $teacher_lesson_Dao->insert($teacher->id, $id);                   
-                }
+            foreach($teacher_lesson->lessonid as $id) {
+                $teacher_lesson_Dao->insert($teacher->id, $id);
+            }
 
             $db = null;
 
@@ -150,6 +150,10 @@ class TeacherDao {
         //$teacher->teacher_image = $row["teacher_image"];
         $teacher->teacher_phone = $row["teacher_phone"];
         $teacher->teacher_email = $row["teacher_email"];
+
+        $lessonsDao = new LessonDao();
+        $lessons = $lessonsDao->getAllLessonsByTeacherId($teacher->id);
+        $teacher->lessons = $lessons;
         return $teacher;
     }
 
@@ -162,6 +166,7 @@ class Teacher {
     public $teacher_name = "";
     public $teacher_phone = "";
     public $teacher_email ="";
+    public $lessons = array();
 
     // if the above fields were private, you would use the two methods below
     // to get and set the value of the property *** We just call the varibles

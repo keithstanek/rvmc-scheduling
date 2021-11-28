@@ -4,9 +4,9 @@
  * SQL To Create the Parent Table
 
 CREATE TABLE `lesson` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `Lesson_Name` VARCHAR(45) NULL,
-  `Lesson_Type` VARCHAR(45) NULL,
+`id` INT NOT NULL AUTO_INCREMENT,
+`Lesson_Name` VARCHAR(45) NULL,
+`Lesson_Type` VARCHAR(45) NULL,
 PRIMARY KEY (`id`));
 
  * If there are table changes, add the alter statements below. Make sure they are
@@ -22,6 +22,32 @@ class LessonDao {
             $db = DbUtil::getConnection();
 
             $sql = "select * from lesson";
+            $stmt = $db->prepare($sql);
+            if ($stmt->execute()) {
+                // loop through the results from the database
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $records[$arrayCounter++] = $this->setRowValue($row);
+                }
+            }
+
+            // always close the db connection
+            $db = null;
+        } catch (PDOException $e) {
+            echo 'DATABASE ERROR' . $e->getMessage() . '<br>';
+            $db = null;
+        }
+
+        // return the array back to the function
+        return $records;
+    }
+
+    public function getAllLessonsByTeacherId($teacherId) {
+        $records = array();
+        $arrayCounter = 0;
+        try {
+            $db = DbUtil::getConnection();
+
+            $sql = "select * from lesson, teacher_lesson where lesson.id = teacher_lesson.lessonid and teacher_lesson.teacherid=" . $teacherId;
             $stmt = $db->prepare($sql);
             if ($stmt->execute()) {
                 // loop through the results from the database

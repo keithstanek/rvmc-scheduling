@@ -16,6 +16,11 @@ if (isset($_POST["btnsubmit"]) ) {
 	$checkin->last_name = "";
 	$checkin->instructor = "";
 	$checkin->Instrument = "";
+    $message = "Something cool";
+    $teacherDao = new TeacherDao();
+    $teacher = $teacherDao->getTeacherByid($_POST["instructor_id"]);
+    $email = $teacher->email;
+    mail($email, 'My Subject', $message);
 }
 
 ?>
@@ -113,7 +118,8 @@ if (isset($_POST["btnsubmit"]) ) {
 		  Select Instructor
 		</button></div>
 		  <div class="column"  style="width: 50%;"><input id="instructor" name="instructor" type="text" class="field left" style="text-align: center; border-radius: 4px; background-color: #C6C6C6" readonly value="<?=$checkin->instructor?>"></div>
-		</div>	
+		</div>
+            <input type="hidden" name="instructor_id" value="">
 			
 		<select id="instrument" name="instrument" class="selectpicker selector">
 		  <optgroup label="Instrument">
@@ -264,14 +270,20 @@ if (isset($_POST["btnsubmit"]) ) {
 
 		function getInputValue1(){  
 			document.getElementById("instructor").value = document.getElementById("input1").value
+            document.getElementById("instructor_id").value = 1;
+            getInstruments(1);
 			$("#myModal").hide();
 		};
 		function getInputValue2(){  
 			document.getElementById("instructor").value = document.getElementById("input2").value
+            document.getElementById("instructor_id").value = 3;
+            getInstruments(3);
 			$("#myModal").hide();
 		};
 		function getInputValue3(){  
 			document.getElementById("instructor").value = document.getElementById("input3").value
+            document.getElementById("instructor_id").value = 4;
+            getInstruments(4);
 			$("#myModal").hide();
 		};
 		function getInputValue4(){  
@@ -294,9 +306,30 @@ if (isset($_POST["btnsubmit"]) ) {
 			document.getElementById("instructor").value = document.getElementById("input8").value
 			$("#myModal").hide();
 		};
+
+        function getInstruments(id) {
+            $(document).ready(function() {
+                $.ajax({
+                    url: "./data.php?id=" + id
+                }).then(function(data) {
+                    var i, L = document.getElementById("instrument").options.length - 1;
+                    for(i = L; i >= 0; i--) {
+                        document.getElementById("instrument").remove(i);
+                    }
+
+                    var options = data.split(",");
+                    for (i = 0; i < options.length; i++) {
+                        console.log(JSON.stringify(options[i]));
+                        var opt = document.createElement('option');
+                        opt.value = options[i];
+                        opt.innerHTML = options[i];
+                        document.getElementById("instrument").appendChild(opt);
+                    }
+                });
+            });
+        }
+
 		function confirmation(){
-		
-		
 			alert("Form successfully submitted!")
 			document.getElementById("instructor").value = ""
 			document.getElementById("first_name").value = ""
