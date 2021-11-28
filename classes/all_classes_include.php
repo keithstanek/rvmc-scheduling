@@ -8,5 +8,6 @@ require dirname(__FILE__) . "/parent_dao.php";
 require dirname(__FILE__) . "/student_dao.php";
 require dirname(__FILE__) . "/teacher_dao.php";
 require dirname(__FILE__) . "/lesson_dao.php";
+require dirname(__FILE__) . "/checkin_dao.php";
 
 ?>
