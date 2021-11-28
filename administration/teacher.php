@@ -83,19 +83,17 @@ if ( str_contains($dbMessage, "ERROR") ) {
 
                                         foreach($lessons as $l){
                                         $selected = "";
-                                        foreach($teacher_lessons as $tls){
-                                            if($tls->lessonid == $l->id){
-                                                $selected = "selected";
-                                                break;
+                                            foreach($teacher_lessons as $tls){
+                                                if($tls->lessonid == $l->id){
+                                                    $selected = "selected";
+                                                    break;
+                                                }
                                             }
-                                        }
-                                        ?>
-                                        <option <?=$selected?> style="margin:5px; margin-bottom:2.5px;" value=<?=$l->id?>><?= $l->Lesson_Name;?> - <?=$l->Lesson_Type; ?> </option><?
-                                        }
-                                        ?>
+                                            ?>
+                                            <option <?=$selected?> style="margin:5px; margin-bottom:2.5px;" value=<?=$l->id?>><?= $l->Lesson_Name;?> - <?=$l->Lesson_Type; ?> </option>
                                         <?php
                                         }
-                                    ?>
+                                        ?>
                                     </select>
 
                                 </div>
