@@ -215,7 +215,7 @@ if (isset($_POST["btnsubmit"]) ) {
 								<input type="text" id="input4" value="Joseph Freeman" readonly>
 								<p>Joseph Freeman teaches Guitar, Bass, and Ukulele. He has been playing guitar for over eight years, and has picked up the bass and ukulele within the last few years. When he was 17, he was a student at RVMC until COVID hit and he was unable to take lessons anymore. About a year later, he was offered to come and teach and he accepted in December of 2020. 
 
-Joseph has interests in a wide variety of music. He loves all sorts of technical playing, but still wants to hear great melodies as well. He is into the genres metal, classical, jazz, and some pop, hip hop, and country. He has a deep interest in music theory and loves to shred when he gets the chance. Strong technique points include- alternate picking, economy picking, sweep picking, string skipping, timing/rhythm. Strong theory points include- scales, modes, improvisation, chord progressions. Can teach complete beginners to advanced players.</p>
+								Joseph has interests in a wide variety of music. He loves all sorts of technical playing, but still wants to hear great melodies as well. He is into the genres metal, classical, jazz, and some pop, hip hop, and country. He has a deep interest in music theory and loves to shred when he gets the chance. Strong technique points include- alternate picking, economy picking, sweep picking, string skipping, timing/rhythm. Strong theory points include- scales, modes, improvisation, chord progressions. Can teach complete beginners to advanced players.</p>
 								<button type="button" onclick="getInputValue4();" class="btn btn-primary" id="btn4">Pick Me!</button>
 							  </div>
 							</div>
