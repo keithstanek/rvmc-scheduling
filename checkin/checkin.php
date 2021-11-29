@@ -12,15 +12,20 @@ isset($_POST["instructor"]) ? $checkin->instructor = $_POST["instructor"] : $che
 isset($_POST["instrument"]) ? $checkin->instrument = $_POST["instrument"] : $checkin->instrument = "";
 if (isset($_POST["btnsubmit"]) ) {
 	$CheckinDao->insert($checkin);
+	
+    $teacherDao = new TeacherDao();
+    $teacher = $teacherDao->getTeacherByid($_POST["instructor_id"]);
+    //$to = $teacher->email;
+	$to = "mwilliams105@atu.edu";
+	$subject = "$checkin->first_name $checkin->last_name has arrived for their $checkin->instrument lesson.";
+	$message = "Hello, $checkin->instructor <br>$checkin->first_name $checkin->last_name has arrived for their $checkin->instrument lesson.";
+	
+    mail($to,$subject,$message);
+	
 	$checkin->first_name = "";
 	$checkin->last_name = "";
 	$checkin->instructor = "";
 	$checkin->Instrument = "";
-    $message = "Something cool";
-    $teacherDao = new TeacherDao();
-    $teacher = $teacherDao->getTeacherByid($_POST["instructor_id"]);
-    $email = $teacher->email;
-    mail($email, 'My Subject', $message);
 }
 
 ?>
