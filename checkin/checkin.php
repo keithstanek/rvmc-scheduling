@@ -177,10 +177,13 @@ if (isset($_POST["btnsubmit"]) ) {
                 <div class="row gx-5 justify-content-center">
                    
                             <div class="card" style="width: 18rem; margin: 1.5rem;">
-							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
+							  <img class="card-img-top" src="img/1.jpeg" alt="Card image cap">
 							  <div class="card-body">
 								<input type="text" id="input1" value="Victoria Greenawalt" readonly>
-								<p></p>
+								<p>Victoria Greenawalt is our manager here at River Valley Music Center. She teaches beginner through advanced voice, beginnner piano, and beginner ukulele. She also teaches concepts such as music theory, ear training, and sight reading. 
+									Victoria has lived in the River Valley most of her life, went to grade school in Russellville, and graduated from Arkansas Tech University with her Bachelor's of Music Education. She is currently teaching elementary music, and is the choir director at Atkins School district. She has also been singing on church worship teams since she was 13.
+									Music had been such a big part of Victoria's life, she knew at a very young age that teaching others music was what she wanted to do. "It's a dream come true to be able to teach students to love music, and to appreciate all that it has to offer. It's such a magical moment to see someone get a concept, or sing something in a way they haven't before, and it just clicks for them. You can see the almost surprised look on their face, and they know they've created something special. That's why I do what I do!" says Greenawalt.
+									In her free time, Victoria loves to spend time with her family and friends. She also loves to spend time  outdoors, watch her favorite shows with her husband, or make crafting projects.</p>
 								<button type="button" onclick="getInputValue1();" class="btn btn-primary" id="btn1">Pick Me!</button>
 							  </div>
 							</div>
@@ -197,10 +200,11 @@ if (isset($_POST["btnsubmit"]) ) {
 				<div class="row gx-5 justify-content-center">
                    
                             <div class="card" style="width: 18rem; margin: 1.5rem;">
-							  <img class="card-img-top" src="img/EmilyMcfadin.jpeg" alt="Card image cap">
+							  <img class="card-img-top" src="img/3.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input3" value="Emily McFadden" readonly>
-								<p>This is sample text that means absolutely nothing.</p>
+								<input type="text" id="input3" value="Emily McFadin" readonly>
+								<p>Emily McFadin teaches woodwind instruments and beginning piano. Originally from Springdale, AR, she moved to Russellville to attend Arkansas Tech University where she graduated with Cum Laude honors and earned her Bachelors in Instrumental Music Education.
+								During her time at ATU she was actively involved in the Baptist Collegiate Ministry (BCM) along with several music ensembles and organizations. She served two years as drum major for the Arkansas Tech Band of Distinction and played both clarinet and low clarinets for ATU's Symphonic Wind Ensemble. Emily enjoys spending time at home with her three cats (Susan, Poof, and Squish), doing puzzles, reading Wonder Woman comic books, and eating Chick-fil-A.</p>
 								<button type="button" onclick="getInputValue3();" class="btn btn-primary" id="btn3">Pick Me!</button>
 							  </div>
 							</div>
@@ -209,7 +213,9 @@ if (isset($_POST["btnsubmit"]) ) {
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
 								<input type="text" id="input4" value="Joseph Freeman" readonly>
-								<p>This is sample text that means absolutely nothing.</p>
+								<p>Joseph Freeman teaches Guitar, Bass, and Ukulele. He has been playing guitar for over eight years, and has picked up the bass and ukulele within the last few years. When he was 17, he was a student at RVMC until COVID hit and he was unable to take lessons anymore. About a year later, he was offered to come and teach and he accepted in December of 2020. 
+
+Joseph has interests in a wide variety of music. He loves all sorts of technical playing, but still wants to hear great melodies as well. He is into the genres metal, classical, jazz, and some pop, hip hop, and country. He has a deep interest in music theory and loves to shred when he gets the chance. Strong technique points include- alternate picking, economy picking, sweep picking, string skipping, timing/rhythm. Strong theory points include- scales, modes, improvisation, chord progressions. Can teach complete beginners to advanced players.</p>
 								<button type="button" onclick="getInputValue4();" class="btn btn-primary" id="btn4">Pick Me!</button>
 							  </div>
 							</div>
@@ -217,7 +223,7 @@ if (isset($_POST["btnsubmit"]) ) {
 				<div class="row gx-5 justify-content-center">
                    
                             <div class="card" style="width: 18rem; margin: 1.5rem;">
-							  <img class="card-img-top" src="img/mathewstone.jpeg" alt="Card image cap">
+							  <img class="card-img-top" src="img/5.jpeg" alt="Card image cap">
 							  <div class="card-body">
 								<input type="text" id="input5" value="Matthew Stone" readonly>
 								<p>Mr. Matthew Stone is a vocal, piano, and music theory instructor in his final semester of pursuing his Bachelor's in Vocal Music Education through Arkansas Tech University. He plans to teach high school choir after he graduates and hopes to compose for choirs across the world. Stone's dream is to teach the language of music to anyone who wishes to learn it and to inspire creativity through the art of song.</p>
@@ -226,12 +232,12 @@ if (isset($_POST["btnsubmit"]) ) {
 							</div>
                         
                     <div class="card" style="width: 18rem; margin: 1.5rem;">
-							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
+							  <img class="card-img-top" src="img/6.jpeg" alt="Card image cap">
 							  <div class="card-body">
 								<input type="text" id="input6" value="Garrett Snavely" readonly>
 								<p>Hello! My name is Garrett Snavely, and I have been a music teacher at River Valley Music Center since July of 2021. I teach piano and voice lessons, and am comfortable with all ages of learners. Having started learning piano at the very late age of 16, I am firm believer that you are able to learn to jump into piano at any point in life. I enjoy working one-on-one with others, and especially so when there is music involved.
 
-I am a graduate of Arkansas Tech University, where I earned a Bachelor’s of Music Education. I was also actively involved in two choirs while studying for my degree. When I’m not giving lessons, I am preparing music for different church services in the area.</p>
+								I am a graduate of Arkansas Tech University, where I earned a Bachelor’s of Music Education. I was also actively involved in two choirs while studying for my degree. When I’m not giving lessons, I am preparing music for different church services in the area.</p>
 								<button type="button" onclick="getInputValue6();" class="btn btn-primary" id="btn6">Pick Me!</button>
 							  </div>
 							</div>
@@ -248,7 +254,7 @@ I am a graduate of Arkansas Tech University, where I earned a Bachelor’s of Musi
 							  </div>
 							</div>
                     <div class="card" style="width: 18rem; margin: 1.5rem;">
-							  <img class="card-img-top" src="img/NathanBain.jpeg" alt="Card image cap">
+							  <img class="card-img-top" src="img/8.jpeg" alt="Card image cap">
 							  <div class="card-body">
 								<input type="text" id="input8" value="Nathan Bain" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
@@ -269,7 +275,7 @@ I am a graduate of Arkansas Tech University, where I earned a Bachelor’s of Musi
                     <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input10" value="Nathan Bain" readonly>
+								<input type="text" id="input10" value="Isabella Palmer" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue10();" class="btn btn-primary" id="btn10">Pick Me!</button>
 							  </div>
