@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex,nofollow">
     <title>River Valley Music Center</title>
-    <link rel="canonical" href="https://www.wrappixel.com/templates/xtreme-admin-lite/" />
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon.png">
     <!-- Custom CSS -->
@@ -36,7 +35,7 @@
     <header class="topbar" data-navbarbg="skin5">
         <nav class="navbar top-navbar navbar-expand-md navbar-dark">
             <div class="navbar-header" data-logobg="skin5">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="parent.php">
                     <b class="logo-icon">
                         <img src="assets/img/logo-icon.png" alt="homepage" class="dark-logo" />
                         <img src="assets/img/logo-light-icon.png" alt="homepage" class="light-logo" />
