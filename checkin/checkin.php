@@ -123,13 +123,26 @@ if (isset($_POST["btnsubmit"]) ) {
 			
 		<select id="instrument" name="instrument" class="selectpicker selector">
 		  <optgroup label="Instrument">
-			<option selected="selected">Select Instrument</option>
-			<option>Guitar</option>
-			<option>Drums</option>
-			<option>Piano</option>
-			<option>Violen</option>
-			<option>Vocals</option>
-		  </optgroup>
+            <option selected="selected">Select Instrument</option>
+            <option>Banjo</option>
+            <option>Bass</option>
+            <option>Bassoon</option>
+            <option>Clarinet</option>
+            <option>Dobro</option>
+            <option>Drum</option>
+            <option>Flute</option>
+            <option>Guitar</option>
+            <option>Mandolin</option>
+            <option>Music Theory</option>
+            <option>Oboe</option>
+            <option>Piano</option>
+            <option>Recorder</option>
+            <option>Saxophone</option>
+            <option>Slide</option>
+            <option>Ukulele</option>
+            <option>Violin</option>
+            <option>Vocal</option>
+          </optgroup>
 		</select>
 
 		<?php
@@ -166,8 +179,8 @@ if (isset($_POST["btnsubmit"]) ) {
                             <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input1" value="Instructor 1" readonly>
-								<p>This is sample text that means absolutely nothing.</p>
+								<input type="text" id="input1" value="Victoria Greenawalt" readonly>
+								<p></p>
 								<button type="button" onclick="getInputValue1();" class="btn btn-primary" id="btn1">Pick Me!</button>
 							  </div>
 							</div>
@@ -175,7 +188,7 @@ if (isset($_POST["btnsubmit"]) ) {
                     <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input2" value="Instructor 2" readonly>
+								<input type="text" id="input2" value="Carolyn Mortenson" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue2();" class="btn btn-primary" id="btn2">Pick Me!</button>
 							  </div>
@@ -184,9 +197,9 @@ if (isset($_POST["btnsubmit"]) ) {
 				<div class="row gx-5 justify-content-center">
                    
                             <div class="card" style="width: 18rem; margin: 1.5rem;">
-							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
+							  <img class="card-img-top" src="img/EmilyMcfadin.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input3" value="Instructor 3" readonly>
+								<input type="text" id="input3" value="Emily McFadden" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue3();" class="btn btn-primary" id="btn3">Pick Me!</button>
 							  </div>
@@ -195,7 +208,7 @@ if (isset($_POST["btnsubmit"]) ) {
                     <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input4" value="Instructor 4" readonly>
+								<input type="text" id="input4" value="Joseph Freeman" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue4();" class="btn btn-primary" id="btn4">Pick Me!</button>
 							  </div>
@@ -204,10 +217,10 @@ if (isset($_POST["btnsubmit"]) ) {
 				<div class="row gx-5 justify-content-center">
                    
                             <div class="card" style="width: 18rem; margin: 1.5rem;">
-							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
+							  <img class="card-img-top" src="img/mathewstone.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input5" value="Instructor 5" readonly>
-								<p>This is sample text that means absolutely nothing.</p>
+								<input type="text" id="input5" value="Matthew Stone" readonly>
+								<p>Mr. Matthew Stone is a vocal, piano, and music theory instructor in his final semester of pursuing his Bachelor's in Vocal Music Education through Arkansas Tech University. He plans to teach high school choir after he graduates and hopes to compose for choirs across the world. Stone's dream is to teach the language of music to anyone who wishes to learn it and to inspire creativity through the art of song.</p>
 								<button type="button" onclick="getInputValue5();" class="btn btn-primary" id="btn5">Pick Me!</button>
 							  </div>
 							</div>
@@ -215,8 +228,10 @@ if (isset($_POST["btnsubmit"]) ) {
                     <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input6" value="Instructor 6" readonly>
-								<p>This is sample text that means absolutely nothing.</p>
+								<input type="text" id="input6" value="Garrett Snavely" readonly>
+								<p>Hello! My name is Garrett Snavely, and I have been a music teacher at River Valley Music Center since July of 2021. I teach piano and voice lessons, and am comfortable with all ages of learners. Having started learning piano at the very late age of 16, I am firm believer that you are able to learn to jump into piano at any point in life. I enjoy working one-on-one with others, and especially so when there is music involved.
+
+I am a graduate of Arkansas Tech University, where I earned a Bachelor’s of Music Education. I was also actively involved in two choirs while studying for my degree. When I’m not giving lessons, I am preparing music for different church services in the area.</p>
 								<button type="button" onclick="getInputValue6();" class="btn btn-primary" id="btn6">Pick Me!</button>
 							  </div>
 							</div>
@@ -227,20 +242,50 @@ if (isset($_POST["btnsubmit"]) ) {
                             <div class="card" style="width: 18rem; margin: 1.5rem;">
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input7" value="Instructor 7" readonly>
+								<input type="text" id="input7" value="Ben Smith" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue7();" class="btn btn-primary" id="btn7">Pick Me!</button>
 							  </div>
 							</div>
                     <div class="card" style="width: 18rem; margin: 1.5rem;">
-							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
+							  <img class="card-img-top" src="img/NathanBain.jpeg" alt="Card image cap">
 							  <div class="card-body">
-								<input type="text" id="input8" value="Instructor 8" readonly>
+								<input type="text" id="input8" value="Nathan Bain" readonly>
 								<p>This is sample text that means absolutely nothing.</p>
 								<button type="button" onclick="getInputValue8();" class="btn btn-primary" id="btn8">Pick Me!</button>
 							  </div>
 							</div>
                 </div> 
+				<div class="row gx-5 justify-content-center">
+                   
+                            <div class="card" style="width: 18rem; margin: 1.5rem;">
+							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
+							  <div class="card-body">
+								<input type="text" id="input9" value="Josh Cannon" readonly>
+								<p>This is sample text that means absolutely nothing.</p>
+								<button type="button" onclick="getInputValue9();" class="btn btn-primary" id="btn9">Pick Me!</button>
+							  </div>
+							</div>
+                    <div class="card" style="width: 18rem; margin: 1.5rem;">
+							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
+							  <div class="card-body">
+								<input type="text" id="input10" value="Nathan Bain" readonly>
+								<p>This is sample text that means absolutely nothing.</p>
+								<button type="button" onclick="getInputValue10();" class="btn btn-primary" id="btn10">Pick Me!</button>
+							  </div>
+							</div>
+                </div> 
+				<div class="row gx-5 justify-content-center">
+                   
+                            <div class="card" style="width: 18rem; margin: 1.5rem;">
+							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
+							  <div class="card-body">
+								<input type="text" id="input11" value="Jason Waterson" readonly>
+								<p>This is sample text that means absolutely nothing.</p>
+								<button type="button" onclick="getInputValue11();" class="btn btn-primary" id="btn11">Pick Me!</button>
+							  </div>
+							</div>
+				</div>
 			</div> 
           </div>
 		</div>			
@@ -276,34 +321,62 @@ if (isset($_POST["btnsubmit"]) ) {
 		};
 		function getInputValue2(){  
 			document.getElementById("instructor").value = document.getElementById("input2").value
-            document.getElementById("instructor_id").value = 3;
-            getInstruments(3);
+            document.getElementById("instructor_id").value = 2;
+            getInstruments(2);
 			$("#myModal").hide();
 		};
 		function getInputValue3(){  
 			document.getElementById("instructor").value = document.getElementById("input3").value
-            document.getElementById("instructor_id").value = 4;
-            getInstruments(4);
+            document.getElementById("instructor_id").value = 3;
+            getInstruments(3);
 			$("#myModal").hide();
 		};
 		function getInputValue4(){  
 			document.getElementById("instructor").value = document.getElementById("input4").value
+			document.getElementById("instructor_id").value = 4;
+            getInstruments(4);
 			$("#myModal").hide();
 		};
 		function getInputValue5(){  
 			document.getElementById("instructor").value = document.getElementById("input5").value
+			document.getElementById("instructor_id").value = 5;
+            getInstruments(5);
 			$("#myModal").hide();
 		};
 		function getInputValue6(){  
 			document.getElementById("instructor").value = document.getElementById("input6").value
+			document.getElementById("instructor_id").value = 6;
+            getInstruments(6);
 			$("#myModal").hide();
 		};
 		function getInputValue7(){  
 			document.getElementById("instructor").value = document.getElementById("input7").value
+			document.getElementById("instructor_id").value = 7;
+            getInstruments(7);
 			$("#myModal").hide();
 		};
 		function getInputValue8(){  
 			document.getElementById("instructor").value = document.getElementById("input8").value
+			document.getElementById("instructor_id").value = 8;
+            getInstruments(8);
+			$("#myModal").hide();
+		};
+		function getInputValue9(){  
+			document.getElementById("instructor").value = document.getElementById("input9").value
+			document.getElementById("instructor_id").value = 9;
+            getInstruments(9);
+			$("#myModal").hide();
+		};
+		function getInputValue10(){  
+			document.getElementById("instructor").value = document.getElementById("input10").value
+			document.getElementById("instructor_id").value = 10;
+            getInstruments(10);
+			$("#myModal").hide();
+		};
+		function getInputValue11(){  
+			document.getElementById("instructor").value = document.getElementById("input11").value
+			document.getElementById("instructor_id").value = 11;
+            getInstruments(11);
 			$("#myModal").hide();
 		};
 

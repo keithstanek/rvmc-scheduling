@@ -121,7 +121,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
             document.getElementById("floatingInput2").value = "";  //parent form input lname
             document.getElementById("floatingInput3").value = "";  //parent form input email
             document.getElementById("floatingInput4").value = "";  //parent form input phone
-            document.getElementById("pid").value = -1;
+            document.getElementById("id").value = -1;
 
           }
     </script>

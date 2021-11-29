@@ -141,7 +141,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
             document.getElementById("floatingInput1").value = "";   //parent form input fname
             document.getElementById("floatingInput2").value = "";  //parent form input lname
             document.getElementById("floatingInput3").value = "";  //parent form input email
-            document.getElementById("pid").value = -1;
+            document.getElementById("id").value = -1;
 
         }
     </script>
@@ -174,7 +174,15 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 <td><?= $t->teacher_name ?></td>
                                 <td><?= $t->teacher_email ?></td>
                                 <td><?= $t->teacher_phone ?></td>
-                                <td><?= $t->teacher_lessons ?></td>
+                                <td>
+                                    <?php
+                                    $output = "";
+                                    foreach($t->lessons as $lesson) {
+                                        $output .=  $lesson->Lesson_Type . "<br>";
+                                    }
+                                    echo $output;
+                                    ?>
+                                </td>
                                 <td>
                                     <a href="teacher.php?id=<?=$t->id?>" class="fa fa-copy"></a> &nbsp;
                                     <a href="teacher.php?id=<?=$t->id?>" class="fa fa-trash"></a>
