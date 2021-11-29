@@ -17,7 +17,7 @@ $teacher = $teacherDao->getTeacherByid($id);
 
 $output = "";
 foreach($teacher->lessons as $lesson) {
-    $output .=  $lesson->Lesson_Type . ",";
+    $output .=  $lesson->Lesson_Name . ",";
 }
 
 echo substr($output, 0, -1);

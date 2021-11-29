@@ -197,7 +197,7 @@ if (isset($_POST["btnsubmit"]) ) {
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
 								<input type="text" id="input2" value="Carolyn Mortenson" readonly>
-								<p>This is sample text that means absolutely nothing.</p>
+								<p>No Bio Available.</p>
 								<button type="button" onclick="getInputValue2();" class="btn btn-primary" id="btn2">Pick Me!</button>
 							  </div>
 							</div>
@@ -254,7 +254,7 @@ if (isset($_POST["btnsubmit"]) ) {
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
 								<input type="text" id="input7" value="Ben Smith" readonly>
-								<p>This is sample text that means absolutely nothing.</p>
+								<p>No Bio Available.</p>
 								<button type="button" onclick="getInputValue7();" class="btn btn-primary" id="btn7">Pick Me!</button>
 							  </div>
 							</div>
@@ -262,7 +262,7 @@ if (isset($_POST["btnsubmit"]) ) {
 							  <img class="card-img-top" src="img/8.jpeg" alt="Card image cap">
 							  <div class="card-body">
 								<input type="text" id="input8" value="Nathan Bain" readonly>
-								<p>This is sample text that means absolutely nothing.</p>
+								<p>No Bio Available.</p>
 								<button type="button" onclick="getInputValue8();" class="btn btn-primary" id="btn8">Pick Me!</button>
 							  </div>
 							</div>
@@ -273,7 +273,7 @@ if (isset($_POST["btnsubmit"]) ) {
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
 								<input type="text" id="input9" value="Josh Cannon" readonly>
-								<p>This is sample text that means absolutely nothing.</p>
+								<p>No Bio Available.</p>
 								<button type="button" onclick="getInputValue9();" class="btn btn-primary" id="btn9">Pick Me!</button>
 							  </div>
 							</div>
@@ -281,7 +281,7 @@ if (isset($_POST["btnsubmit"]) ) {
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
 								<input type="text" id="input10" value="Isabella Palmer" readonly>
-								<p>This is sample text that means absolutely nothing.</p>
+								<p>No Bio Available.</p>
 								<button type="button" onclick="getInputValue10();" class="btn btn-primary" id="btn10">Pick Me!</button>
 							  </div>
 							</div>
@@ -292,7 +292,7 @@ if (isset($_POST["btnsubmit"]) ) {
 							  <img class="card-img-top" src="img/guitar.jpeg" alt="Card image cap">
 							  <div class="card-body">
 								<input type="text" id="input11" value="Jason Waterson" readonly>
-								<p>This is sample text that means absolutely nothing.</p>
+								<p>No Bio Available.</p>
 								<button type="button" onclick="getInputValue11();" class="btn btn-primary" id="btn11">Pick Me!</button>
 							  </div>
 							</div>

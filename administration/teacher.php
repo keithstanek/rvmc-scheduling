@@ -178,7 +178,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <?php
                                     $output = "";
                                     foreach($t->lessons as $lesson) {
-                                        $output .=  $lesson->Lesson_Type . "<br>";
+                                        $output .=  $lesson->Lesson_Name . "<br>";
                                     }
                                     echo $output;
                                     ?>
