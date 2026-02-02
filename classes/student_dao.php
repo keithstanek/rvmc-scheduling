@@ -118,7 +118,7 @@ class StudentDao {
     }
 
     public function update($student) {
-        $sql = "update student set first_name=:first_name, last_name=:last_name, DOB=:DOB, parent_id=:parent_id where id=:student_id";
+        $sql = "update student set first_name=:first_name, last_name=:last_name, DOB=:DOB, parent_id=:parent_id where id=:id";
         $db = DbUtil::getConnection();
 		
         try {
@@ -128,7 +128,7 @@ class StudentDao {
             $stmt->bindValue("last_name", $student->last_name);
             $stmt->bindValue("DOB", $student->DOB);
             $stmt->bindValue("parent_id", $student->parent_id);
-            $stmt->bindValue("student_id", $student->student_id);
+            $stmt->bindValue("id", $student->id);
 
             $stmt->execute();
             $db = null;
@@ -140,7 +140,7 @@ class StudentDao {
     }
 	
 	public function updateParent($student) {
-        $sql = "update student set first_name=:first_name, last_name=:last_name, DOB=:DOB, parent_id=:parent_id where student_id=:student_id";
+        $sql = "update student set first_name=:first_name, last_name=:last_name, DOB=:DOB, parent_id=:parent_id where id=:_id";
         $db = DbUtil::getConnection();
 		
         try {
@@ -150,7 +150,7 @@ class StudentDao {
             $stmt->bindValue("last_name", $student->last_name);
             $stmt->bindValue("DOB", $student->DOB);
             $stmt->bindValue("parent_id", $student->parent_id);
-            $stmt->bindValue("student_id", $student->student_id);
+            $stmt->bindValue("id", $student->id);
 
             $stmt->execute();
             $db = null;
@@ -162,12 +162,12 @@ class StudentDao {
     }
 
     public function delete($student) {
-        $sql = "delete from student where id=:student_id";
+        $sql = "delete from student where id=:id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("student_id", $student->student_id);
+            $stmt->bindValue("id", $student->id);
 
             $stmt->execute();
             $db = null;
@@ -182,7 +182,7 @@ class StudentDao {
         $student = new Student();
 
         // populate the fields
-        $student->student_id = $row["id"];
+        $student->id = $row["id"];
         $student->first_name = $row["first_name"];
         $student->last_name = $row["last_name"];
         $student->DOB = $row["DOB"];
@@ -196,11 +196,19 @@ class StudentDao {
 // This class will be the model that represents the database table and html form
 // student is a reserved word..... need to name this class something else
 class Student {
-    public $student_id = 0;
+    public $id = 0;
     public $first_name = "";
     public $last_name = "";
-    public $DOB = "";
+    public $DOB = null;
     public $parent_id = "";
+
+    public function __construct(array $data = []) {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
 
     // if the above fields were private, you would use the two methods below
     // to get and set the value of the property *** We just call the varibles

@@ -1,6 +1,6 @@
 <?php  
-$title = "Lesson Admin";
-$breadcrumb = "Lessons";
+$title = "Course Admin";
+$breadcrumb = "Courses";
 
 require dirname(__FILE__) . "/page-includes/header.php";  
 require dirname(__FILE__) . "/page-includes/nav-bar.php";  
@@ -10,23 +10,22 @@ require dirname(__FILE__) . "/page-includes/page-wrapper-start.php";
 $dbMessage = "";
 $dbMessageBg = "bg-primary";
 $action = "insert"; // the default action for the page load
-$lessonDao = new LessonDao();
+$courseDao = new CourseDao();
 
-$lesson = new Lesson();
+$course = new Course();
 
 // check ternary operator --> true ? do this : else this;
-isset($_POST["id"]) ? $lesson->id = $_POST["id"] : $lesson->id = "";
-isset($_POST["Lesson_Name"]) ? $lesson->Lesson_Name = $_POST["Lesson_Name"] : $lesson->Lesson_Name = "";
-isset($_POST["Lesson_Type"]) ? $lesson->Lesson_Type = $_POST["Lesson_Type"] : $lesson->Lesson_Type = "";
+isset($_POST["id"]) ? $course->id = $_POST["id"] : $course->id = "";
+isset($_POST["name"]) ? $course->name = $_POST["name"] : $course->name = "";
 
 
 // if they submitted the form, take the values from above and insert/update/delete the record
 if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {
-    $dbMessage = $lessonDao->insert($lesson);
+    $dbMessage = $courseDao->insert($course);
 } else if ( isset($_POST["btnUpdate"]) && $_POST["btnUpdate"] == "update" ) {
-    $dbMessage = $lessonDao->update($lesson);
+    $dbMessage = $courseDao->update($course);
 } else if ( isset($_POST["btnDelete"]) && $_POST["btnDelete"] == "delete" ) {
-    $dbMessage = $lessonDao->delete($lesson);
+    $dbMessage = $courseDao->delete($course);
 }
 
 // if they came in through the link to update/delete, lets get the values from the database
@@ -34,8 +33,8 @@ if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {
 if ( isset($_GET["id"]) ) {
     $id = $_GET["id"];
 
-    // get the lesson data from the table
-    $lesson = $lessonDao->getLessonByLessonID($id);
+    // get the course data from the table
+    $course = $courseDao->getCourseByCourseID($id);
 }
 
 if ( str_contains($dbMessage, "ERROR") ) {
@@ -44,29 +43,25 @@ if ( str_contains($dbMessage, "ERROR") ) {
 ?>
 
 <div class="container-fluid">
-    <h2>Lesson Administration Page</h2>
+    <h2>Course Administration Page</h2>
 
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="lesson.php" method="post">
+                    <form action="course.php" method="post">
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="Lesson_Name" class="form-control" id="floatingInput1" placeholder="John" value="<?=$lesson->Lesson_Name?>">
-                                    <label for="floatingInput">Lesson Name</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <input type="text" name="Lesson_Type" class="form-control" id="floatingInput2" placeholder="Beginner, Intermediate, Advanced" value="<?=$lesson->Lesson_Type?>">
-                                    <label for="floatingInput">Lesson Type</label>
+                                    <input type="text" name="name" class="form-control" id="floatingInput1" placeholder="John" value="<?=$course->name?>">
+                                    <label for="floatingInput">Course Name</label>
                                 </div>
 							</div>
                         <div class="row">
                             <div class="col-12">
-                                <input type="hidden" name="id" value="<?=$lesson->id?>">
+                                <input type="hidden" name="id" value="<?=$course->id?>">
                                 <?php
-                                if ($lesson->id == "") {
+                                if ($course->id == "") {
                                 ?>
                                 <button type="submit" name="btnInsert" value="insert" class="btn btn-primary">Insert</button>
                                 <?php
@@ -118,24 +113,23 @@ if ( str_contains($dbMessage, "ERROR") ) {
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Lesson Name</th>
-                                    <th scope="col">Lesson Type</th>
+                                    <th scope="col">Course Name</th>
+                                    <!-- <th scope="col">Course Type</th> -->
                                     <th scope="col">&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>
                             <?php
-                            $lessons = $lessonDao->getAlllessons();
+                            $courses = $courseDao->getAllcourses();
 
-                            foreach ($lessons as $lesson) {
+                            foreach ($courses as $course) {
                             ?>
                                 <tr>
-                                    <td scope="row"><a href="lesson.php?id=<?=$lesson->id?>"><?= $lesson->id ?></a></td>
-                                    <td><?= $lesson->Lesson_Name ?></td>
-                                    <td><?= $lesson->Lesson_Type ?></td>
+                                    <td scope="row"><a href="course.php?id=<?=$course->id?>"><?= $course->id ?></a></td>
+                                    <td><?= $course->name ?></td>
                                     <td>
-                                        <a href="lesson.php?id=<?=$lesson->id?>" class="fa fa-copy"></a> &nbsp;
-                                        <a href="lesson.php?id=<?=$lesson->id?>" class="fa fa-trash"></a>
+                                        <a href="course.php?id=<?=$course->id?>" class="fa fa-copy"></a> &nbsp;
+                                        <a href="course.php?id=<?=$course->id?>" class="fa fa-trash"></a>
 
                                     </td>
                                 </tr>

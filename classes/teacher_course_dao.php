@@ -3,23 +3,23 @@
  *
  * SQL To Create the teacher Table
 
-CREATE TABLE `teacher_lesson` (
+CREATE TABLE `teacher_course` (
   `teacherid` int NOT NULL,
-  `lessonid` int DEFAULT NULL
+  `courseid` int DEFAULT NULL
 )
  * If there are table changes, add the alter statements below. Make sure they are
  * in the order they should be executed in!!
  */
 
-class Teacher_Lesson_Dao {
+class TeacherCourseDao {
 
-    public function getAllTeacherLessons() {
+    public function getAllTeacherCourses() {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from teacher_lesson";
+            $sql = "select * from teacher_course";
             $stmt = $db->prepare($sql);
             if ($stmt->execute()) {
                 // loop through the results from the database
@@ -39,13 +39,13 @@ class Teacher_Lesson_Dao {
         return $records;
     }
 
-    public function getTeacherByLessonId($id) {
+    public function getTeacherByCourseId($id) {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select teacherid from teacher_lesson where id=:id";
+            $sql = "select teacherid from teacher_course where id=:id";
             $stmt = $db->prepare($sql);
             $stmt->bindValue("id", $id);
             if ($stmt->execute()) {
@@ -66,13 +66,13 @@ class Teacher_Lesson_Dao {
         return $records[0];
     }
 
-	public function getLessonByTeacherId($id) {
+	public function getCourseByTeacherId($id) {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select teacherid, lessonid from teacher_lesson where teacherid=:id";
+            $sql = "select teacherid, courseid from teacher_course where teacherid=:id";
             $stmt = $db->prepare($sql);
             $stmt->bindValue("id", $id);
             if ($stmt->execute()) {
@@ -93,14 +93,14 @@ class Teacher_Lesson_Dao {
         return $records;
     }
 	
-    public function insert($teacherid, $lessonid) {
-        $sql = "insert into teacher_lesson (teacherid, lessonid) values (:teacherid, :lessonid);";
+    public function insert($teacherid, $courseid) {
+        $sql = "insert into teacher_course (teacherid, courseid) values (:teacherid, :courseid);";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
             $stmt->bindValue("teacherid", $teacherid);
-			$stmt->bindValue("lessonid", $lessonid);
+			$stmt->bindValue("courseid", $courseid);
 
             $stmt->execute();
             $db = null;
@@ -112,14 +112,14 @@ class Teacher_Lesson_Dao {
         }
     }
 
-    public function update($teacher_lesson) {
-        $sql = "update teacher_lesson set teacherid=:tid, lessonid=:lesid where teacherid=:tid AND lessonid=:lesid;";
+    public function update($teacher_course) {
+        $sql = "update teacher_course set teacherid=:tid, courseid=:lesid where teacherid=:tid AND courseid=:lesid;";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("tid", $teacher_lesson->teacherid);
-            $stmt->bindValue("lesid", $teacher_lesson->lessonid);
+            $stmt->bindValue("tid", $teacher_course->teacherid);
+            $stmt->bindValue("lesid", $teacher_course->courseid);
 
             $stmt->execute();
             $db = null;
@@ -130,13 +130,13 @@ class Teacher_Lesson_Dao {
         }
     }
 
-    public function delete($teacher_lesson) {
-        $sql = "delete from teacher_lesson where teacherid=:tid AND lessonid=:lesid";
+    public function delete($teacher_course) {
+        $sql = "delete from teacher_course where teacherid=:tid AND courseid=:lesid";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("tid", $teacher_lesson->id);
+            $stmt->bindValue("tid", $teacher_course->id);
 
             $stmt->execute();
             $db = null;
@@ -148,7 +148,7 @@ class Teacher_Lesson_Dao {
     }
 
     public function deleteByTeacherID($teacherid) {
-        $sql = "delete from teacher_lesson where teacherid=:tid";
+        $sql = "delete from teacher_course where teacherid=:tid";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
@@ -165,21 +165,21 @@ class Teacher_Lesson_Dao {
     }
 
     private function setRowValue($row) {
-        $teacher_lesson = new Teacher_Lesson();
+        $teacher_course = new TeacherCourse();
 
         // populate the fields
-        $teacher_lesson->teacherid = $row["teacherid"];
-        $teacher_lesson->lessonid = $row["lessonid"];
-        return $teacher_lesson;
+        $teacher_course->teacherid = $row["teacherid"];
+        $teacher_course->courseid = $row["courseid"];
+        return $teacher_course;
     }
 
 }
 
 // This class will be the model that represents the database table and html form
 // teacher is a reserved word..... need to name this class something else
-class Teacher_Lesson {
+class TeacherCourse {
     public $teacherid = 0;
-    public $lessonid = 0;
+    public $courseid = 0;
 
     // if the above fields were private, you would use the two methods below
     // to get and set the value of the property *** We just call the varibles

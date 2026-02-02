@@ -3,25 +3,24 @@
  *
  * SQL To Create the Parent Table
 
-CREATE TABLE `lesson` (
+CREATE TABLE `course` (
 `id` INT NOT NULL AUTO_INCREMENT,
-`Lesson_Name` VARCHAR(45) NULL,
-`Lesson_Type` VARCHAR(45) NULL,
+`name` VARCHAR(45) NULL
 PRIMARY KEY (`id`));
 
  * If there are table changes, add the alter statements below. Make sure they are
  * in the order they should be executed in!!
  */
 
-class LessonDao {
+class CourseDao {
 
-    public function getAllLessons() {
+    public function getAllCourses() {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from lesson";
+            $sql = "select * from course";
             $stmt = $db->prepare($sql);
             if ($stmt->execute()) {
                 // loop through the results from the database
@@ -41,13 +40,13 @@ class LessonDao {
         return $records;
     }
 
-    public function getAllLessonsByTeacherId($teacherId) {
+    public function getAllCoursesByTeacherId($teacherId) {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from lesson, teacher_lesson where lesson.id = teacher_lesson.lessonid and teacher_lesson.teacherid=" . $teacherId;
+            $sql = "select * from course, teacher_course where course.id = teacher_course.courseid and teacher_course.teacherid=" . $teacherId;
             $stmt = $db->prepare($sql);
             if ($stmt->execute()) {
                 // loop through the results from the database
@@ -67,13 +66,13 @@ class LessonDao {
         return $records;
     }
 
-    public function getLessonByLessonID($id) {
+    public function getCourseById($id) {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from lesson where id=:id";
+            $sql = "select * from course where id=:id";
             $stmt = $db->prepare($sql);
             $stmt->bindValue("id", $id);
             if ($stmt->execute()) {
@@ -94,14 +93,13 @@ class LessonDao {
         return $records[0];
     }
 
-    public function insert($lesson) {
-        $sql = "insert into lesson (Lesson_Name, Lesson_Type) values (:Lesson_Name, :Lesson_Type)";
+    public function insert($course) {
+        $sql = "insert into course (name) values (:name)";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("Lesson_Name", $lesson->Lesson_Name);
-            $stmt->bindValue("Lesson_Type", $lesson->Lesson_Type);
+            $stmt->bindValue("name", $course->name);
 
             $stmt->execute();
             $db = null;
@@ -112,15 +110,14 @@ class LessonDao {
         }
     }
 
-    public function update($lesson) {
-        $sql = "update lesson set Lesson_Name=:Lesson_Name, Lesson_Type=:Lesson_Type where id=:id";
+    public function update($course) {
+        $sql = "update course set name=:name where id=:id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("Lesson_Name", $lesson->Lesson_Name);
-            $stmt->bindValue("Lesson_Type", $lesson->Lesson_Type);
-            $stmt->bindValue("id", $lesson->id);
+            $stmt->bindValue("name", $course->name);
+            $stmt->bindValue("id", $course->id);
 
             $stmt->execute();
             $db = null;
@@ -131,13 +128,13 @@ class LessonDao {
         }
     }
 
-    public function delete($lesson) {
-        $sql = "delete from lesson where id=:id";
+    public function delete($course) {
+        $sql = "delete from course where id=:id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("id", $lesson->id);
+            $stmt->bindValue("id", $course->id);
 
             $stmt->execute();
             $db = null;
@@ -149,24 +146,30 @@ class LessonDao {
     }
 
     private function setRowValue($row) {
-        $lesson = new Lesson();
+        $course = new Course();
 
         // populate the fields
-        $lesson->id = $row["id"];
-        $lesson->Lesson_Name = $row["Lesson_Name"];
-        $lesson->Lesson_Type = $row["Lesson_Type"];
+        $course->id = $row["id"];
+        $course->name = $row["name"];
 
-        return $lesson;
+        return $course;
     }
 
 }
 
 // This class will be the model that represents the database table and html form
 // Parent is a reserved word..... need to name this class something else
-class Lesson {
+class Course {
     public $id = 0;
-    public $Lesson_Name = "";
-    public $Lesson_Type = "";
+    public $name = "";
+
+    public function __construct(array $data = []) {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
 
     // if the above fields were private, you would use the two methods below
     // to get and set the value of the property *** We just call the varibles

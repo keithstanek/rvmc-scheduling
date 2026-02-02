@@ -26,6 +26,7 @@ isset($_POST["phone"]) ? $parent->phone = $_POST["phone"] : $parent->phone = "";
 // if they submitted the form, take the values from above and insert/update/delete the record
 if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {
     $dbMessage = $parentDao->insert($parent);
+    echo $dbMessage .  "<-----<br>";
 } else if ( isset($_POST["btnUpdate"]) && $_POST["btnUpdate"] == "update" ) {
     $dbMessage = $parentDao->update($parent);
 } else if ( isset($_POST["btnDelete"]) && $_POST["btnDelete"] == "delete" ) {

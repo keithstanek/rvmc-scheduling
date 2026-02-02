@@ -14,25 +14,27 @@ $action = "insert"; // the default action for the page load
 $teacherDao = new TeacherDao();
 $teacher = new Teacher();
 
-$lessonDao = new LessonDao();
-$lesson = new Lesson();
+$courseDao = new CourseDao();
+$course = new Course();
 
-$teacher_lesson_Dao = new Teacher_Lesson_Dao;
-$teacher_lesson = new Teacher_Lesson();
+$teacherCourseDao = new TeacherCourseDao();
+$teacherCourse = new TeacherCourse();
+$courseIds = array();
 
 // check ternary operator --> true ? do this : else this;
 isset($_POST["id"]) ? $teacher->id = $_POST["id"] : $teacher->id = "";
-isset($_POST["teacher_name"]) ? $teacher->teacher_name = $_POST["teacher_name"] : $teacher->teacher_name = "";
-isset($_POST["teacher_email"]) ? $teacher->teacher_email = $_POST["teacher_email"] : $teacher->teacher_email = "";
-isset($_POST["phone"]) ? $teacher->teacher_phone = $_POST["phone"] : $teacher->teacher_phone = "";
-isset($_POST["id"]) ? $teacher_lesson->teacherid = $_POST["id"] : $teacher_lesson->teacherid = "";
-isset($_POST["lessonids"]) ? $teacher_lesson->lessonid = $_POST["lessonids"] : $teacher_lesson->lessonid = "";
+isset($_POST["first_name"]) ? $teacher->first_name = $_POST["first_name"] : $teacher->first_name = "";
+isset($_POST["last_name"]) ? $teacher->last_name = $_POST["last_name"] : $teacher->last_name = "";
+isset($_POST["email"]) ? $teacher->email = $_POST["email"] : $teacher->email = "";
+isset($_POST["phone"]) ? $teacher->phone = $_POST["phone"] : $teacher->phone = "";
+isset($_POST["id"]) ? $teacherCourse->teacherid = $_POST["id"] : $teacherCourse->teacherid = "";
+isset($_POST["courseids"]) ? $courseIds = $_POST["courseids"] : $courseIds = array();
 
 // if they submitted the form, take the values from above and insert/update/delete the record
 if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {
-    $dbMessage = $teacherDao->insert($teacher, $teacher_lesson);
+    $dbMessage = $teacherDao->insert($teacher, $courseIds);
 } else if ( isset($_POST["btnUpdate"]) && $_POST["btnUpdate"] == "update" ) {
-    $dbMessage = $teacherDao->update($teacher, $teacher_lesson);
+    $dbMessage = $teacherDao->update($teacher, $courseIds);
 } else if ( isset($_POST["btnDelete"]) && $_POST["btnDelete"] == "delete" ) {
     $dbMessage = $teacherDao->delete($teacher);
 }
@@ -49,6 +51,11 @@ if ( isset($_GET["id"]) ) {
 if ( str_contains($dbMessage, "ERROR") ) {
     $dbMessageBg = "bg-error";
 }
+
+$courses = $courseDao->getAllCourses();
+$teachers = $teacherDao->getAllTeachers();
+$teacher_courses = $teacherCourseDao->getCourseByTeacherId($teacher->id);
+
 ?>
 
 <div class="container-fluid">
@@ -62,35 +69,34 @@ if ( str_contains($dbMessage, "ERROR") ) {
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="teacher_name" class="form-control" id="floatingInput1" placeholder="John" value="<?=$teacher->teacher_name?>">
-                                    <label for="floatingInput">Teacher Name</label>
+                                    <input type="text" name="first_name" class="form-control" id="floatingInput1" placeholder="John" value="<?=$teacher->first_name?>">
+                                    <label for="floatingInput">First Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="email" name="teacher_email" class="form-control" id="floatingInput2" placeholder="name@example.com" value="<?=$teacher->teacher_email?>">
-                                    <label for="floatingInput">Email Address</label>
+                                    <input type="text" name="last_name" class="form-control" id="floatingInput2" placeholder="Doe" value="<?=$teacher->last_name?>">
+                                    <label for="floatingInput">Last Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="phone" class="form-control" id="floatingInput3" placeholder="123-456-7890" value="<?=$teacher->teacher_phone?>">
+                                    <input type="text" name="email" class="form-control" id="floatingInput2" placeholder="Doe" value="<?=$teacher->email?>">
+                                    <label for="floatingInput">Email</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="phone" class="form-control" id="floatingInput3" placeholder="123-456-7890" value="<?=$teacher->phone?>">
                                     <label for="floatingInput">Phone No.</label>
                                 </div>
                                 <div class="form-floating mb-3">
-
-                                    <select style="margin:0px; padding:0px; height:125px;" name="lessonids[]" id="lessons" multiple class="form-control">
+                                    <select multiple style="margin:0px; padding:0px; height:125px;" name="courseids[]" id="courses" class="form-control">
                                         <?php
-                                        $lessons = $lessonDao->getAllLessons();
-                                        $teachers = $teacherDao->getAllTeachers();
-                                        $teacher_lessons = $teacher_lesson_Dao->getLessonByTeacherId($teacher->id);
-
-                                        foreach($lessons as $l){
-                                        $selected = "";
-                                            foreach($teacher_lessons as $tls){
-                                                if($tls->lessonid == $l->id){
+                                        foreach($courses as $l) {
+                                            $selected = "";
+                                            foreach($teacher_courses as $tls){
+                                                if($tls->courseid == $l->id){
                                                     $selected = "selected";
                                                     break;
                                                 }
                                             }
                                             ?>
-                                            <option <?=$selected?> style="margin:5px; margin-bottom:2.5px;" value=<?=$l->id?>><?= $l->Lesson_Name;?> - <?=$l->Lesson_Type; ?> </option>
+                                            <option <?=$selected?> style="margin:5px; margin-bottom:2.5px;" value="<?=$l->id?>"><?= $l->name;?></option>
                                         <?php
                                         }
                                         ?>
@@ -158,27 +164,24 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 <th scope="col">Teacher Name</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Phone</th>
-                                <th scope="col">Lessons Taught
+                                <th scope="col">Courses Taught
                                 <th scope="col">&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
-                            $teachers = $teacherDao->getAllteachers();
-                            $teacher_lessons = $teacher_lesson_Dao->getAllTeacherLessons();
-
                             foreach ($teachers as $t) {
                             ?>
                             <tr>
                                 <th scope="row"><a href="teacher.php?id=<?=$t->id?>"><?= $t->id ?></a></th>
-                                <td><?= $t->teacher_name ?></td>
-                                <td><?= $t->teacher_email ?></td>
-                                <td><?= $t->teacher_phone ?></td>
+                                <td><?= $t->first_name ?> <?= $t->last_name ?></td>
+                                <td><?= $t->email ?></td>
+                                <td><?= $t->phone ?></td>
                                 <td>
                                     <?php
                                     $output = "";
-                                    foreach($t->lessons as $lesson) {
-                                        $output .=  $lesson->Lesson_Name . "<br>";
+                                    foreach($t->courses as $course) {
+                                        $output .=  $course->name . "<br>";
                                     }
                                     echo $output;
                                     ?>

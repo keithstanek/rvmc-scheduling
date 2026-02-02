@@ -34,8 +34,8 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="lesson.php" aria-expanded="false">
-                        <i class="mdi mdi-account-network"></i><span class="hide-menu">Lessons</span>
+                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="course.php" aria-expanded="false">
+                        <i class="mdi mdi-account-network"></i><span class="hide-menu">Courses</span>
                     </a>
                 </li>
             </ul>

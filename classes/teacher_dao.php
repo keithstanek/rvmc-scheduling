@@ -69,23 +69,23 @@ class TeacherDao {
         return $records[0];
     }
 
-    public function insert($teacher, $teacher_lesson) {
-        $sql = "insert into teacher (teacher_name, teacher_email, teacher_phone) values (:teacher_name, :teacher_email, :teacher_phone)";
+    public function insert($teacher, $courses) {
+        $sql = "insert into teacher (first_name, last_name, email, phone) values (:first_name, :last_name, :email, :phone)";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("teacher_name", $teacher->teacher_name);
-            //$stmt->bindValue("teacher_image", $teacher->teacher_image);
-            $stmt->bindValue("teacher_phone", $teacher->teacher_phone);
-            $stmt->bindValue("teacher_email", $teacher->teacher_email);
+            $stmt->bindValue("first_name", $teacher->first_name);
+            $stmt->bindValue("last_name", $teacher->last_name);
+            $stmt->bindValue("email", $teacher->email);
+            $stmt->bindValue("phone", $teacher->phone);
             $stmt->execute();
 
             $teacherid = $db->lastInsertId();
-
-            $teacher_lesson_Dao = new Teacher_Lesson_Dao();
-            foreach($teacher_lesson->lessonid as $id) {
-                $teacher_lesson_Dao->insert($teacherid, $id);
+            
+            $teacherCourseDao = new TeacherCourseDao();
+            foreach($courses as $id) {
+                $teacherCourseDao->insert($teacherid, $id);
             }
 
             $db = null;
@@ -97,22 +97,24 @@ class TeacherDao {
         }
     }
 
-    public function update($teacher, $teacher_lesson) {
-        $sql = "update teacher set teacher_name=:t_name, teacher_phone=:t_phone, teacher_email=:t_email where id=:id";
+    public function update($teacher, $courses) {
+        $sql = "update teacher set first_name=:first_name, last_name=:last_name, phone=:phone, email=:email where id=:id";
         $db = DbUtil::getConnection();
+        echo json_encode($teacher);
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("t_name", $teacher->teacher_name);
-            $stmt->bindValue("t_phone", $teacher->teacher_phone);
-            $stmt->bindValue("t_email", $teacher->teacher_email);
+            $stmt->bindValue("first_name", $teacher->first_name);
+            $stmt->bindValue("last_name", $teacher->last_name);
+            $stmt->bindValue("phone", $teacher->phone);
+            $stmt->bindValue("email", $teacher->email);
             $stmt->bindValue("id", $teacher->id);
             $stmt->execute();
 
-            $teacher_lesson_Dao = new Teacher_Lesson_Dao();
-            $teacher_lesson_Dao->deleteByTeacherID($teacher->id);
-            foreach($teacher_lesson->lessonid as $id) {
-                $teacher_lesson_Dao->insert($teacher->id, $id);
+            $teacherCourseDao = new TeacherCourseDao();
+            $teacherCourseDao->deleteByTeacherID($teacher->id);
+            foreach($courses as $id) {
+                $teacherCourseDao->insert($teacher->id, $id);
             }
 
             $db = null;
@@ -143,17 +145,15 @@ class TeacherDao {
     private function setRowValue($row) {
         $teacher = new teacher();
 
-        // populate the fields
         $teacher->id = $row["id"];
-        //          Match class   match DB Column Name
-        $teacher->teacher_name = $row["teacher_name"];
-        //$teacher->teacher_image = $row["teacher_image"];
-        $teacher->teacher_phone = $row["teacher_phone"];
-        $teacher->teacher_email = $row["teacher_email"];
+        $teacher->first_name = $row["first_name"];
+        $teacher->last_name = $row["last_name"];
+        $teacher->phone = $row["phone"];
+        $teacher->email = $row["email"];
 
-        $lessonsDao = new LessonDao();
-        $lessons = $lessonsDao->getAllLessonsByTeacherId($teacher->id);
-        $teacher->lessons = $lessons;
+        $coursesDao = new CourseDao();
+        $courses = $coursesDao->getAllCoursesByTeacherId($teacher->id);
+        $teacher->courses = $courses;
         return $teacher;
     }
 
@@ -163,10 +163,19 @@ class TeacherDao {
 // teacher is a reserved word..... need to name this class something else
 class Teacher {
     public $id = 0;
-    public $teacher_name = "";
-    public $teacher_phone = "";
-    public $teacher_email ="";
-    public $lessons = array();
+    public $first_name = "";
+    public $last_name = "";
+    public $phone = "";
+    public $email ="";
+    public $courses = array();
+
+    public function __construct(array $data = []) {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
 
     // if the above fields were private, you would use the two methods below
     // to get and set the value of the property *** We just call the varibles
