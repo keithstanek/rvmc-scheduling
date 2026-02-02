@@ -1,0 +1,186 @@
+<?php
+$title = "Students Admin";
+$breadcrumb = "Students";
+
+require dirname(__FILE__) . "/page-includes/header.php";
+require dirname(__FILE__) . "/page-includes/nav-bar.php";
+require dirname(__FILE__) . "/page-includes/page-wrapper-start.php";
+?>
+
+<script>
+const ENDPOINT = 'api/students.php';
+const FORM_SUBMIT_PAGE = 'student.php';
+document.addEventListener("DOMContentLoaded", async function() {
+    setupFormListener(FORM_SUBMIT_PAGE);
+});
+
+async function handleForm(action, data = null) {
+    const form = document.querySelector("form[action='" + FORM_SUBMIT_PAGE + "']");
+    const formData = new FormData(form);
+    if (!data) {
+        data = {
+            id: formData.get("id"),
+            first_name: formData.get("firstname"),
+            last_name: formData.get("lastname"),
+            // DOB: formData.get("DOB" === 'mm/dd/yyyy' ? '' : formData.get("DOB")),
+            parent_id: formData.get("parent")
+        };
+    }
+    await handleRequest(action, data, ENDPOINT, FORM_SUBMIT_PAGE);
+}
+
+async function deleteData(id) {
+    await handleRequest("delete", {id}, ENDPOINT, FORM_SUBMIT_PAGE);
+}
+</script>
+
+<?php
+$formAction = "insert";
+$studentDao = new StudentDao();
+$student = new Student();
+
+// if they came in through the link to update/delete, lets get the values from the database
+// these values will be sent in the url, so we will use the GET method ---> Check the difference between GET/POST if you need help
+if ( isset($_GET["id"]) ) {
+    $id = $_GET["id"];
+    // get the person data from the table
+    $student = $studentDao->getstudentById($id);
+    $formAction = "update";
+}
+?>
+
+<div class="container-fluid">
+    <h2>Student Administration Page</h2>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="student.php" method="post">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="firstname" class="form-control" id="floatingInput1" placeholder="John" value="<?=$student->first_name?>">
+                                    <label for="floatingInput">First Name</label>
+                                </div>
+                                <!-- <div class="form-floating mb-3">
+                                    <input type="date" name="DOB" class="form-control" id="floatingInput2" placeholder="MM-DD-YYYY" value="<?=$student->DOB?>">
+                                    <label for="floatingInput">Date of Birth</label>
+                                </div> -->
+                                <div class="form-floating mb-3">
+                                    <input type="text" name="lastname" class="form-control" id="floatingInput3" placeholder="Doe" value="<?=$student->last_name?>">
+                                    <label for="floatingInput">Last Name</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                
+                                <div class="form-floating mb-3">
+                                    <!-- <input type="text" name="ParentID" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->parent_id?>"> -->
+                                    
+                                    <select id="parent" name="parent" class="form-control" value="<? $parent->id ?>">
+                                    <option value=""></option>    
+                                    <?php
+                                        $parentsDao = new ParentDao();
+                                        $parents = $parentsDao->getAllParents();
+                                        foreach ($parents as $parent) {
+                                        $selected = ($parent->id == $student->parent_id) ? "selected" : ""; 
+                                        ?>
+                                            <option <?=$selected ?> value="<?= $parent->id ?>"><?= $parent->firstName ?> <?= $parent->lastName ?></option> 
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <label for="parent">Parent</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <a href="parent.php" class="btn btn-primary align-end">Add Parent</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <input type="hidden" name="id" value="<?=$student->id?>">
+                                <?php
+                                if ($formAction == "insert") {
+                                ?>
+                                <button type="submit" name="btnInsert" value="insert" class="btn btn-primary">Insert</button>
+                                <?php
+                                } else {
+                                ?>
+                                <button type="submit" name="btnUpdate" value="update" class="btn btn-primary">Update</button>
+                                <button type="submit" name="btnDelete" value="delete" class="btn btn-warning">Delete</button>
+                                <button type="submit" name="btnReset" value="reset" class="btn btn-danger" onclick="freset();">Reset</button>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <Script>
+    //form reset function                                                                                       
+    function freset(){
+
+            document.getElementById("floatingInput1").value = "";   //parent form input fname
+            document.getElementById("floatingInput2").value = "";  //parent form input lname
+            document.getElementById("floatingInput3").value = "";  //parent form input email
+            document.getElementById("parent").value = "";  //parent form input phone
+            document.getElementById("id").value = -1;
+
+          }
+    </script>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">First Name</th>
+                                    <th scope="col">Last Name</th>
+                                    <!-- <th scope="col">DOB</th> -->
+                                    <th scope="col">parent_id</th>
+                                    <th scope="col">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            $students = $studentDao->getAllstudents();
+
+                            foreach ($students as $student) {
+                            ?>
+                                <tr>
+                                    <td scope="row"><a href="student.php?id=<?=$student->id?>"><?= $student->id ?></a></td>
+                                    <td><?= $student->first_name ?></td>
+                                    <td><?= $student->last_name ?></td>
+                                    <!-- <td><?= $student->DOB ?></td> -->
+                                    <td><?= $student->parent_id ?></td>
+                                    <td>
+                                        <a href="student.php?id=<?=$student->id?>" class="fa fa-copy"></a> &nbsp;
+                                        <a href="javascript:void(0)" onclick="deleteData(<?=$student->id?>)" class="fa fa-trash"></a>
+
+                                    </td>
+                                </tr>
+                            <?php
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php  require dirname(__FILE__) . "/page-includes/footer.php";  ?>
+
+
+
+
