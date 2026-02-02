@@ -1,31 +1,26 @@
 <?php
-
-
-/*
+/**
  *
  * SQL To Create the Parent Table
 
-CREATE TABLE `parent` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `first_name` VARCHAR(75) NULL,
-  `last_name` VARCHAR(75) NULL,
-  `email` VARCHAR(75) NULL,
-  `phone` VARCHAR(15) NULL,
+CREATE TABLE `course` (
+`id` INT NOT NULL AUTO_INCREMENT,
+`name` VARCHAR(45) NULL
 PRIMARY KEY (`id`));
 
  * If there are table changes, add the alter statements below. Make sure they are
  * in the order they should be executed in!!
  */
 
-class ParentDao {
+class CourseDao {
 
-    public function getAllParents() {
+    public function getAllCourses() {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from parent";
+            $sql = "select * from course";
             $stmt = $db->prepare($sql);
             if ($stmt->execute()) {
                 // loop through the results from the database
@@ -45,13 +40,39 @@ class ParentDao {
         return $records;
     }
 
-    public function getParentById($id) {
+    public function getAllCoursesByTeacherId($teacherId) {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from parent where id=:id";
+            $sql = "select * from course, teacher_course where course.id = teacher_course.courseid and teacher_course.teacherid=" . $teacherId;
+            $stmt = $db->prepare($sql);
+            if ($stmt->execute()) {
+                // loop through the results from the database
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $records[$arrayCounter++] = $this->setRowValue($row);
+                }
+            }
+
+            // always close the db connection
+            $db = null;
+        } catch (PDOException $e) {
+            echo 'DATABASE ERROR' . $e->getMessage() . '<br>';
+            $db = null;
+        }
+
+        // return the array back to the function
+        return $records;
+    }
+
+    public function getCourseById($id) {
+        $records = array();
+        $arrayCounter = 0;
+        try {
+            $db = DbUtil::getConnection();
+
+            $sql = "select * from course where id=:id";
             $stmt = $db->prepare($sql);
             $stmt->bindValue("id", $id);
             if ($stmt->execute()) {
@@ -72,16 +93,13 @@ class ParentDao {
         return $records[0];
     }
 
-    public function insert($parent) {
-        $sql = "insert into parent (first_name, last_name, email, phone) values (:firstName, :lastName, :email, :phone)";
+    public function insert($course) {
+        $sql = "insert into course (name) values (:name)";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("firstName", $parent->firstName);
-            $stmt->bindValue("lastName", $parent->lastName);
-            $stmt->bindValue("email", $parent->email);
-            $stmt->bindValue("phone", $parent->phone);
+            $stmt->bindValue("name", $course->name);
 
             $stmt->execute();
             $db = null;
@@ -92,17 +110,14 @@ class ParentDao {
         }
     }
 
-    public function update($parent) {
-        $sql = "update parent set first_name=:firstName, last_name=:lastName, email=:email, phone=:phone where id=:id";
+    public function update($course) {
+        $sql = "update course set name=:name where id=:id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("firstName", $parent->firstName);
-            $stmt->bindValue("lastName", $parent->lastName);
-            $stmt->bindValue("email", $parent->email);
-            $stmt->bindValue("phone", $parent->phone);
-            $stmt->bindValue("id", $parent->id);
+            $stmt->bindValue("name", $course->name);
+            $stmt->bindValue("id", $course->id);
 
             $stmt->execute();
             $db = null;
@@ -113,13 +128,13 @@ class ParentDao {
         }
     }
 
-    public function delete($parent) {
-        $sql = "delete from parent where id=:id";
+    public function delete($course) {
+        $sql = "delete from course where id=:id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("id", $parent->id);
+            $stmt->bindValue("id", $course->id);
 
             $stmt->execute();
             $db = null;
@@ -131,28 +146,30 @@ class ParentDao {
     }
 
     private function setRowValue($row) {
-        $parent = new Guardian();
+        $course = new Course();
 
         // populate the fields
-        $parent->id = $row["id"];
-        $parent->firstName = $row["first_name"];
-        $parent->lastName = $row["last_name"];
-        $parent->email = $row["email"];
-        $parent->phone = $row["phone"];
+        $course->id = $row["id"];
+        $course->name = $row["name"];
 
-        return $parent;
+        return $course;
     }
 
 }
 
 // This class will be the model that represents the database table and html form
 // Parent is a reserved word..... need to name this class something else
-class Guardian {
+class Course {
     public $id = 0;
-    public $firstName = "";
-    public $lastName = "";
-    public $email = "";
-    public $phone = "";
+    public $name = "";
+
+    public function __construct(array $data = []) {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
 
     // if the above fields were private, you would use the two methods below
     // to get and set the value of the property *** We just call the varibles

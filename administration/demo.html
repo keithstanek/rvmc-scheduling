@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tech Careers & AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root {
+      --bg1: #0f2027;
+      --bg2: #203a43;
+      --bg3: #2c5364;
+      --accent: #3fd2c7;
+      --text: #f5f7fa;
+      --muted: #b0bec5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Subtle grid overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .slide {
+      display: none;
+      height: 100vh;
+      padding: 80px 10%;
+      justify-content: center;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: var(--accent);
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      color: var(--accent);
+    }
+
+    p, li {
+      font-size: 1.25rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    ul li::before {
+      content: "▸ ";
+      color: var(--accent);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .poll {
+      margin-top: 16px;
+      padding: 16px;
+      border-left: 4px solid var(--accent);
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    button {
+      background: rgba(255,255,255,0.1);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 10px 16px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    button:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .counter {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Slide 1 -->
+  <section class="slide active">
+    <h1>Tech Careers & AI</h1>
+    <p>What software engineers (and other tech roles) actually do</p>
+    <p class="muted">Silver City High School — Gifted Program</p>
+  </section>
+
+  <!-- Slide 2 -->
+  <section class="slide">
+    <h2>Quick intro</h2>
+    <ul>
+      <li>Who I am & what I build</li>
+      <li>I didn’t have this figured out in high school</li>
+      <li>Tech is more than just coding</li>
+    </ul>
+
+    <div class="poll">
+      <strong>Poll:</strong> How familiar are you with tech careers?
+    </div>
+  </section>
+
+  <!-- Slide 3 -->
+  <section class="slide">
+    <h2>How I got into tech</h2>
+    <ul>
+      <li>Non-linear path</li>
+      <li>Learning by doing</li>
+      <li>Curiosity mattered more than grades</li>
+    </ul>
+  </section>
+
+  <!-- Slide 4 -->
+  <section class="slide">
+    <h2>What engineers actually do</h2>
+    <ul>
+      <li>Meetings & planning</li>
+      <li>Writing and fixing code</li>
+      <li>Working with people, not just computers</li>
+      <li>Yes — lots of Googling</li>
+    </ul>
+
+    <div class="poll">
+      <strong>Poll:</strong> What takes up most of a workday?
+    </div>
+  </section>
+
+  <!-- Slide 5 -->
+  <section class="slide">
+    <h2>AI & coding</h2>
+    <ul>
+      <li>AI helps you start faster</li>
+      <li>Explains unfamiliar code</li>
+      <li>Finds bugs & edge cases</li>
+      <li>Does NOT replace judgment</li>
+    </ul>
+
+    <p class="muted">AI replaces blank screens, not engineers.</p>
+  </section>
+
+  <!-- Slide 6 -->
+  <section class="slide">
+    <h2>Tech is bigger than engineers</h2>
+    <ul>
+      <li>Software Engineering</li>
+      <li>IT & Systems</li>
+      <li>Cybersecurity</li>
+      <li>Data & Analytics</li>
+      <li>Product, UX & Design</li>
+      <li>QA & Reliability</li>
+      <li>Leadership & Management</li>
+    </ul>
+  </section>
+
+  <!-- Slide 7 -->
+  <section class="slide">
+    <h2>Which role fits you?</h2>
+    <ul>
+      <li>Puzzle-solvers → Engineering</li>
+      <li>Fixers → IT / Systems</li>
+      <li>Skeptics → Cybersecurity</li>
+      <li>Pattern-lovers → Data</li>
+      <li>Empaths → UX / Product</li>
+      <li>Organizers → Leadership</li>
+    </ul>
+
+    <div class="poll">
+      <strong>Poll:</strong> Which sounds most like you?
+    </div>
+  </section>
+
+  <!-- Slide 8 -->
+  <section class="slide">
+    <h2>Education paths</h2>
+    <ul>
+      <li>College degrees</li>
+      <li>Community college</li>
+      <li>Bootcamps & certifications</li>
+      <li>Side projects matter</li>
+    </ul>
+  </section>
+
+  <!-- Slide 9 -->
+  <section class="slide">
+    <h2>What I love (and don’t)</h2>
+    <ul>
+      <li>Solving real problems</li>
+      <li>Creative work</li>
+      <li>Flexibility</li>
+      <li>Things breaking at bad times</li>
+    </ul>
+  </section>
+
+  <!-- Slide 10 -->
+  <section class="slide">
+    <h2>Advice</h2>
+    <ul>
+      <li>Try small experiments</li>
+      <li>Build things you care about</li>
+      <li>Learn how to learn</li>
+      <li>Failure = feedback</li>
+    </ul>
+
+    <p class="muted">The best career matches how your brain works.</p>
+  </section>
+
+  <!-- Navigation -->
+  <div class="nav">
+    <button onclick="prev()">◀ Prev</button>
+    <span class="counter" id="counter"></span>
+    <button onclick="next()">Next ▶</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let current = 0;
+
+    function update() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === current));
+      document.getElementById('counter').textContent =
+        `Slide ${current + 1} / ${slides.length}`;
+    }
+
+    function next() {
+      if (current < slides.length - 1) {
+        current++;
+        update();
+      }
+    }
+
+    function prev() {
+      if (current > 0) {
+        current--;
+        update();
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
+    });
+
+    update();
+  </script>
+
+</body>
+</html>

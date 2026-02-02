@@ -5,47 +5,48 @@ $breadcrumb = "Students";
 require dirname(__FILE__) . "/page-includes/header.php";
 require dirname(__FILE__) . "/page-includes/nav-bar.php";
 require dirname(__FILE__) . "/page-includes/page-wrapper-start.php";
+?>
 
+<script>
+const ENDPOINT = 'api/students.php';
+const FORM_SUBMIT_PAGE = 'student.php';
+document.addEventListener("DOMContentLoaded", async function() {
+    setupFormListener(FORM_SUBMIT_PAGE);
+});
 
-// check to see if they submitted the form with a proper action
-$dbMessage = "";
-$dbMessageBg = "bg-primary";
-$action = "insert"; // the default action for the page load
-$studentDao = new StudentDao();
-
-$student = new Student();
-
-// check ternary operator --> true ? do this : else this;
-isset($_POST["id"]) ? $student->id = $_POST["id"] : $student->id = "";
-isset($_POST["first_name"]) ? $student->firstName = $_POST["first_name"] : $student->firstName = "";
-isset($_POST["last_name"]) ? $student->lastName = $_POST["last_name"] : $student->lastName = "";
-isset($_POST["email"]) ? $student->email = $_POST["email"] : $student->email = "";
-isset($_POST["phone"]) ? $student->phone = $_POST["phone"] : $student->phone = "";
-
-
-// if they submitted the form, take the values from above and insert/update/delete the record
-if ( isset($_POST["btnInsert"]) && $_POST["btnInsert"] == "insert" ) {
-    $dbMessage = $studentDao->insert($student);
-} else if ( isset($_POST["btnUpdate"]) && $_POST["btnUpdate"] == "update" ) {
-    $dbMessage = $studentDao->update($student);
-} else if ( isset($_POST["btnDelete"]) && $_POST["btnDelete"] == "delete" ) {
-    $dbMessage = $studentDao->delete($student);
+async function handleForm(action, data = null) {
+    const form = document.querySelector("form[action='" + FORM_SUBMIT_PAGE + "']");
+    const formData = new FormData(form);
+    if (!data) {
+        data = {
+            id: formData.get("id"),
+            first_name: formData.get("firstname"),
+            last_name: formData.get("lastname"),
+            // DOB: formData.get("DOB" === 'mm/dd/yyyy' ? '' : formData.get("DOB")),
+            parent_id: formData.get("parent")
+        };
+    }
+    await handleRequest(action, data, ENDPOINT, FORM_SUBMIT_PAGE);
 }
+
+async function deleteData(id) {
+    await handleRequest("delete", {id}, ENDPOINT, FORM_SUBMIT_PAGE);
+}
+</script>
+
+<?php
+$formAction = "insert";
+$studentDao = new StudentDao();
+$student = new Student();
 
 // if they came in through the link to update/delete, lets get the values from the database
 // these values will be sent in the url, so we will use the GET method ---> Check the difference between GET/POST if you need help
 if ( isset($_GET["id"]) ) {
     $id = $_GET["id"];
-
     // get the person data from the table
     $student = $studentDao->getstudentById($id);
+    $formAction = "update";
 }
-
-if ( str_contains($dbMessage, "ERROR") ) {
-    $dbMessageBg = "bg-error";
-}
-
-
 ?>
 
 <div class="container-fluid">
@@ -59,22 +60,40 @@ if ( str_contains($dbMessage, "ERROR") ) {
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="first_name" class="form-control" id="floatingInput" placeholder="John" value="<?=$student->firstName?>">
+                                    <input type="text" name="firstname" class="form-control" id="floatingInput1" placeholder="John" value="<?=$student->first_name?>">
                                     <label for="floatingInput">First Name</label>
                                 </div>
+                                <!-- <div class="form-floating mb-3">
+                                    <input type="date" name="DOB" class="form-control" id="floatingInput2" placeholder="MM-DD-YYYY" value="<?=$student->DOB?>">
+                                    <label for="floatingInput">Date of Birth</label>
+                                </div> -->
                                 <div class="form-floating mb-3">
-                                    <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="<?=$student->email?>">
-                                    <label for="floatingInput">Email address</label>
+                                    <input type="text" name="lastname" class="form-control" id="floatingInput3" placeholder="Doe" value="<?=$student->last_name?>">
+                                    <label for="floatingInput">Last Name</label>
                                 </div>
                             </div>
                             <div class="col-6">
+                                
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="last_name" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->lastName?>">
-                                    <label for="floatingInput">Last Name</label>
+                                    <!-- <input type="text" name="ParentID" class="form-control" id="floatingInput" placeholder="Doe" value="<?=$student->parent_id?>"> -->
+                                    
+                                    <select id="parent" name="parent" class="form-control" value="<? $parent->id ?>">
+                                    <option value=""></option>    
+                                    <?php
+                                        $parentsDao = new ParentDao();
+                                        $parents = $parentsDao->getAllParents();
+                                        foreach ($parents as $parent) {
+                                        $selected = ($parent->id == $student->parent_id) ? "selected" : ""; 
+                                        ?>
+                                            <option <?=$selected ?> value="<?= $parent->id ?>"><?= $parent->firstName ?> <?= $parent->lastName ?></option> 
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <label for="parent">Parent</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="phone" class="form-control" id="floatingInput" placeholder="123-456-7890" value="<?=$student->phone?>">
-                                    <label for="floatingInput">Phone No.</label>
+                                    <a href="parent.php" class="btn btn-primary align-end">Add Parent</a>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +101,7 @@ if ( str_contains($dbMessage, "ERROR") ) {
                             <div class="col-12">
                                 <input type="hidden" name="id" value="<?=$student->id?>">
                                 <?php
-                                if ($student->id == "") {
+                                if ($formAction == "insert") {
                                 ?>
                                 <button type="submit" name="btnInsert" value="insert" class="btn btn-primary">Insert</button>
                                 <?php
@@ -90,29 +109,29 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                 ?>
                                 <button type="submit" name="btnUpdate" value="update" class="btn btn-primary">Update</button>
                                 <button type="submit" name="btnDelete" value="delete" class="btn btn-warning">Delete</button>
+                                <button type="submit" name="btnReset" value="reset" class="btn btn-danger" onclick="freset();">Reset</button>
                                 <?php
                                 }
                                 ?>
                             </div>
                         </div>
-                        <?php
-                        if ($dbMessage != "") {
-                        ?>
-                                <br>
-                                <div class="row">
-                                    <div class="col">
-                                    <button style="width: 100%" class="btn btn-block text-white <?= $dbMessageBg ?>"><?= $dbMessage ?></button>
-                                    </div>
-                                </div>
-                        <?php
-                        }
-                        ?>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <Script>
+    //form reset function                                                                                       
+    function freset(){
 
+            document.getElementById("floatingInput1").value = "";   //parent form input fname
+            document.getElementById("floatingInput2").value = "";  //parent form input lname
+            document.getElementById("floatingInput3").value = "";  //parent form input email
+            document.getElementById("parent").value = "";  //parent form input phone
+            document.getElementById("id").value = -1;
+
+          }
+    </script>
 
     <div class="row">
         <div class="col-12">
@@ -125,8 +144,8 @@ if ( str_contains($dbMessage, "ERROR") ) {
                                     <th scope="col">#</th>
                                     <th scope="col">First Name</th>
                                     <th scope="col">Last Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Phone</th>
+                                    <!-- <th scope="col">DOB</th> -->
+                                    <th scope="col">parent_id</th>
                                     <th scope="col">&nbsp;</th>
                                 </tr>
                             </thead>
@@ -137,14 +156,14 @@ if ( str_contains($dbMessage, "ERROR") ) {
                             foreach ($students as $student) {
                             ?>
                                 <tr>
-                                    <th scope="row"><a href="student.php?id=<?=$student->id?>"><?= $student->id ?></a></th>
-                                    <td><?= $student->firstName ?></td>
-                                    <td><?= $student->lastName ?></td>
-                                    <td><?= $student->email ?></td>
-                                    <td><?= $student->phone ?></td>
+                                    <td scope="row"><a href="student.php?id=<?=$student->id?>"><?= $student->id ?></a></td>
+                                    <td><?= $student->first_name ?></td>
+                                    <td><?= $student->last_name ?></td>
+                                    <!-- <td><?= $student->DOB ?></td> -->
+                                    <td><?= $student->parent_id ?></td>
                                     <td>
                                         <a href="student.php?id=<?=$student->id?>" class="fa fa-copy"></a> &nbsp;
-                                        <a href="student.php?id=<?=$student->id?>" class="fa fa-trash"></a>
+                                        <a href="javascript:void(0)" onclick="deleteData(<?=$student->id?>)" class="fa fa-trash"></a>
 
                                     </td>
                                 </tr>

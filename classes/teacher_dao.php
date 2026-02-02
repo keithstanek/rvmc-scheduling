@@ -4,11 +4,11 @@
  * SQL To Create the teacher Table
 
 CREATE TABLE `teacher` (
-  `TeacherID` INT NOT NULL AUTO_INCREMENT,
-  `teacher_name` VARCHAR(45) NULL,
-  `teacher_image` VARCHAR(45) NULL,
-  `teacher_phone` VARCHAR(45) NULL,
-PRIMARY KEY (`TeacherID`));
+`id` INT NOT NULL AUTO_INCREMENT,
+`teacher_name` VARCHAR(45) NULL,
+`teacher_image` VARCHAR(45) NULL,
+`teacher_phone` VARCHAR(45) NULL,
+PRIMARY KEY (`id`));
 
  * If there are table changes, add the alter statements below. Make sure they are
  * in the order they should be executed in!!
@@ -42,15 +42,15 @@ class TeacherDao {
         return $records;
     }
 
-    public function getTeacherByTeacherID($TeacherID) {
+    public function getTeacherByid($id) {
         $records = array();
         $arrayCounter = 0;
         try {
             $db = DbUtil::getConnection();
 
-            $sql = "select * from teacher where TeacherID=:TeacherID";
+            $sql = "select * from teacher where id=:id";
             $stmt = $db->prepare($sql);
-            $stmt->bindValue("TeacherID", $TeacherID);
+            $stmt->bindValue("id", $id);
             if ($stmt->execute()) {
                 // loop through the results from the database
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -69,38 +69,54 @@ class TeacherDao {
         return $records[0];
     }
 
-    public function insert($teacher) {
-        $sql = "insert into teacher (teacher_name, teacher_image, teacher_phone) values (:teacher_name, :teacher_image, :teacher_phone)";
+    public function insert($teacher, $courses) {
+        $sql = "insert into teacher (first_name, last_name, email, phone) values (:first_name, :last_name, :email, :phone)";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("teacher_name", $teacher->teacher_name);
-            $stmt->bindValue("teacher_image", $teacher->teacher_image);
-            $stmt->bindValue("teacher_phone", $teacher->teacher_phone);
-
+            $stmt->bindValue("first_name", $teacher->first_name);
+            $stmt->bindValue("last_name", $teacher->last_name);
+            $stmt->bindValue("email", $teacher->email);
+            $stmt->bindValue("phone", $teacher->phone);
             $stmt->execute();
-            $db = null;
+
+            $teacherid = $db->lastInsertId();
             
-            return "Insert Successful";
+            $teacherCourseDao = new TeacherCourseDao();
+            foreach($courses as $id) {
+                $teacherCourseDao->insert($teacherid, $id);
             }
-            catch (PDOException $e) {
+
+            $db = null;
+
+            return "Insert Successful";
+        }
+        catch (PDOException $e) {
             return "ERROR: " . $e->getMessage();
         }
     }
 
-    public function update($teacher) {
-        $sql = "update teacher set teacher_name=:teacher_name, teacher_image=:teacher_image, teacher_phone=:teacher_phone where TeacherID=:TeacherID";
+    public function update($teacher, $courses) {
+        $sql = "update teacher set first_name=:first_name, last_name=:last_name, phone=:phone, email=:email where id=:id";
         $db = DbUtil::getConnection();
+        echo json_encode($teacher);
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("teacher_name", $teacher->teacher_name);
-            $stmt->bindValue("teacher_image", $teacher->teacher_image);
-            $stmt->bindValue("teacher_phone", $teacher->teacher_phone);
-            $stmt->bindValue("TeacherID", $teacher->TeacherID);
-
+            $stmt->bindValue("first_name", $teacher->first_name);
+            $stmt->bindValue("last_name", $teacher->last_name);
+            $stmt->bindValue("phone", $teacher->phone);
+            $stmt->bindValue("email", $teacher->email);
+            $stmt->bindValue("id", $teacher->id);
             $stmt->execute();
+
+            $teacherCourseDao = new TeacherCourseDao();
+            $teacherCourseDao->deleteByTeacherID($teacher->id);
+            foreach($courses as $id) {
+                $teacherCourseDao->insert($teacher->id, $id);
+            }
+
             $db = null;
 
             return "Update Successful";
@@ -110,12 +126,12 @@ class TeacherDao {
     }
 
     public function delete($teacher) {
-        $sql = "delete from teacher where TeacherID=:TeacherID";
+        $sql = "delete from teacher where id=:id";
         $db = DbUtil::getConnection();
         try {
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue("TeacherID", $teacher->TeacherID);
+            $stmt->bindValue("id", $teacher->id);
 
             $stmt->execute();
             $db = null;
@@ -127,14 +143,17 @@ class TeacherDao {
     }
 
     private function setRowValue($row) {
-        $teacher = new Teacher();
+        $teacher = new teacher();
 
-        // populate the fields
-        $teacher->TeacherID = $row["TeacherID"];
-        $teacher->teacher_name = $row["teacher_name"];
-        $teacher->teacher_image = $row["teacher_image"];
-        $teacher->teacher_phone = $row["teacher_phone"];
+        $teacher->id = $row["id"];
+        $teacher->first_name = $row["first_name"];
+        $teacher->last_name = $row["last_name"];
+        $teacher->phone = $row["phone"];
+        $teacher->email = $row["email"];
 
+        $coursesDao = new CourseDao();
+        $courses = $coursesDao->getAllCoursesByTeacherId($teacher->id);
+        $teacher->courses = $courses;
         return $teacher;
     }
 
@@ -143,10 +162,20 @@ class TeacherDao {
 // This class will be the model that represents the database table and html form
 // teacher is a reserved word..... need to name this class something else
 class Teacher {
-    public $TeacherID = 0;
-    public $teacher_name = "";
-    public $teacher_image = "";
-    public $teacher_phone = "";
+    public $id = 0;
+    public $first_name = "";
+    public $last_name = "";
+    public $phone = "";
+    public $email ="";
+    public $courses = array();
+
+    public function __construct(array $data = []) {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
 
     // if the above fields were private, you would use the two methods below
     // to get and set the value of the property *** We just call the varibles

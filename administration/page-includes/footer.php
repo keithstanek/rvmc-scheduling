@@ -14,5 +14,6 @@
         <script src="assets/js/sidebarmenu.js"></script>
         <!--Custom JavaScript -->
         <script src="assets/js/custom.js"></script>
+        <script src="assets/js/util.js"></script>
     </body>
 </html>

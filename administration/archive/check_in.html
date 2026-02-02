@@ -214,6 +214,18 @@
     
 	
 	<script>
+		<?php 
+        if (isset($_POST["btnsubmit"])) {
+        ?>
+        $(document).ready(function() {
+            myClick();
+        });
+        function myClick() {
+            setTimeout( function() { $('.alert').alert('close'); }, 3000 );
+        }
+        <?php
+        }
+        ?>
 		
 		function getInputValue1(){  
 			document.getElementById("selIns").value = document.getElementById("input1").value
