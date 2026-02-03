@@ -31,17 +31,6 @@ function getDBConnection() {
     }
 }
 
-// Get teacher ID from session
-function getTeacherId() {
-    $_SESSION['teacher_id'] = "1";
-    if (!isset($_SESSION['teacher_id'])) {
-        http_response_code(401);
-        echo json_encode(['error' => 'Unauthorized', 'message' => 'Teacher not logged in']);
-        exit();
-    }
-    return $_SESSION['teacher_id'];
-}
-
 // Validate lesson data
 function validateLessonData($data, $isUpdate = false) {
     $errors = [];
@@ -52,9 +41,9 @@ function validateLessonData($data, $isUpdate = false) {
         }
     }
     
-    if (!$isUpdate || isset($data['class_id'])) {
-        if (empty($data['class_id']) || !is_numeric($data['class_id'])) {
-            $errors[] = 'Valid class_id is required';
+    if (!$isUpdate || isset($data['course_id'])) {
+        if (empty($data['course_id']) || !is_numeric($data['course_id'])) {
+            $errors[] = 'Valid course_id is required';
         }
     }
     
@@ -69,7 +58,7 @@ function validateLessonData($data, $isUpdate = false) {
             $errors[] = 'Valid time (HH:MM or HH:MM:SS) is required';
         }
     }
-    
+
     if (!$isUpdate || isset($data['duration'])) {
         if (empty($data['duration']) || !is_numeric($data['duration']) || $data['duration'] < 15) {
             $errors[] = 'Duration must be at least 15 minutes';
@@ -152,67 +141,60 @@ function expandRecurringLessons($lessons, $filters = []) {
 }
 
 // Patch getLessons to expand recurring lessons for calendar
-function getLessons($pdo, $teacherId, $filters = []) {
-    try {
-        $sql = "SELECT 
-                    l.id,
-                    l.teacher_id,
-                    l.student_id,
-                    l.class_id,
-                    l.lesson_date as date,
-                    l.lesson_time as time,
-                    l.duration,
-                    l.frequency,
-                    l.notes,
-                    l.payment_amount as payment,
-                    l.payment_method,
-                    l.status,
-                    CONCAT(s.first_name, ' ', s.last_name) AS student_name,
-                    c.name,
-                    l.created_at,
-                    l.updated_at
-                FROM lesson l
-                INNER JOIN student s ON l.student_id = s.id
-                INNER JOIN class c ON l.class_id = c.id
-                WHERE l.teacher_id = :teacher_id";
+// function getLessons($pdo, $teacherId, $filters = []) {
+//     try {
+//         $sql = "SELECT 
+//                     l.id,
+//                     l.teacher_id,
+//                     l.student_id,
+//                     l.course_id,
+//                     l.lesson_date as date,
+//                     l.frequency,
+//                     l.notes,
+//                     l.payment_amount as payment,
+//                     l.payment_method,
+//                     CONCAT(s.first_name, ' ', s.last_name) AS student_name,
+//                     c.name,
+//                     l.created_at,
+//                     l.updated_at
+//                 FROM lesson l
+//                 INNER JOIN student s ON l.student_id = s.id
+//                 INNER JOIN course c ON l.course_id = c.id
+//                 WHERE l.teacher_id = :teacher_id";
         
-        $params = [':teacher_id' => $teacherId];
+//         $params = [':teacher_id' => $teacherId];
         
-        // Only filter by student/status, not date, so we can expand recurrences
-        if (!empty($filters['student_id'])) {
-            $sql .= " AND l.student_id = :student_id";
-            $params[':student_id'] = $filters['student_id'];
-        }
-        if (!empty($filters['status'])) {
-            $sql .= " AND l.status = :status";
-            $params[':status'] = $filters['status'];
-        }
-        $sql .= " ORDER BY l.lesson_date ASC, l.lesson_time ASC";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        $lessons = $stmt->fetchAll();
+//         // Only filter by student, not date, so we can expand recurrences
+//         if (!empty($filters['student_id'])) {
+//             $sql .= " AND l.student_id = :student_id";
+//             $params[':student_id'] = $filters['student_id'];
+//         }
+//         $sql .= " ORDER BY l.lesson_date ASC";
+//         $stmt = $pdo->prepare($sql);
+//         $stmt->execute($params);
+//         $lessons = $stmt->fetchAll();
 
-        // Expand recurring lessons for calendar
-        $expanded = expandRecurringLessons($lessons, $filters);
+//         // Expand recurring lessons for calendar
+//         $expanded = expandRecurringLessons($lessons, $filters);
 
-        // Sort by date/time
-        usort($expanded, function($a, $b) {
-            $cmp = strcmp($a['date'], $b['date']);
-            if ($cmp === 0) return strcmp($a['time'], $b['time']);
-            return $cmp;
-        });
+//         // Sort by date/time
+//         usort($expanded, function($a, $b) {
+//             $cmp = strcmp($a['date'], $b['date']);
+//             if ($cmp === 0) return strcmp($a['time'], $b['time']);
+//             return $cmp;
+//         });
 
-        return [
-            'success' => true,
-            'lessons' => $expanded
-        ];
-    } catch (PDOException $e) {
-        http_response_code(500);
-        return ['error' => 'Failed to fetch lessons', 'message' => $e->getMessage()];
-    }
-}
+//         return [
+//             'success' => true,
+//             'lessons' => $expanded
+//         ];
+//     } catch (PDOException $e) {
+//         http_response_code(500);
+//         return ['error' => 'Failed to fetch lessons', 'message' => $e->getMessage()];
+//     }
+// }
 // CREATE - Add new lesson
-function createLesson($pdo, $data, $teacherId) {
+function createLesson($pdo, $data) {
     $errors = validateLessonData($data);
     if (!empty($errors)) {
         http_response_code(400);
@@ -221,37 +203,41 @@ function createLesson($pdo, $data, $teacherId) {
     
     try {
         $sql = "INSERT INTO lesson (
-                    teacher_id, student_id, class_id, lesson_date, lesson_time, 
-                    duration, frequency, notes, payment_amount, payment_method, status
-                ) VALUES (
-                    :teacher_id, :student_id, :class_id, :lesson_date, :lesson_time,
-                    :duration, :frequency, :notes, :payment_amount, :payment_method, 'scheduled'
-                )";
-        
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':teacher_id' => $teacherId,
-            ':student_id' => $data['student_id'],
-            ':class_id' => $data['class_id'],
-            ':lesson_date' => $data['date'],
-            ':lesson_time' => $data['time'],
-            ':duration' => $data['duration'],
-            ':frequency' => $data['frequency'],
-            ':notes' => $data['notes'] ?? null,
-            ':payment_amount' => !empty($data['payment']) ? $data['payment'] : 0.00,
-            ':payment_method' => $data['payment_method'] ?? null
-        ]);
-        
-        $lessonId = $pdo->lastInsertId();
-        
-        // Fetch the created lesson with joined data
-        $lesson = getLessonById($pdo, $lessonId, $teacherId);
-        
+                    series_id, teacher_id, student_id, course_id, lesson_date, lesson_time,  
+                    duration, frequency, notes, payment_amount, payment_method
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+
+        $lessonDateTime = new DateTime($data['date']);
+        $currentDate = clone $lessonDateTime;
+        $seriesId = uniqid();
+
+        for ($i = 0; $i < 10; $i++) {
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                $seriesId,
+                $data['teacher_id'],
+                $data['student_id'],
+                $data['course_id'],
+                $currentDate->format('Y-m-d H:i:s'),
+                $data['time'],
+                $data['duration'],
+                $data['frequency'],
+                $data['notes'] ?? null,
+                !empty($data['payment']) ? $data['payment'] : 0.00,
+                $data['payment_method'] ?? null
+            ]);
+
+            if ($data['frequency'] === 'single') {
+                break;
+            }
+
+            $currentDate = nextLessonDate($currentDate, $data['frequency']);
+        }
+                
         http_response_code(201);
         return [
             'success' => true,
             'message' => 'Lesson created successfully',
-            'lesson' => $lesson
         ];
         
     } catch (PDOException $e) {
@@ -260,78 +246,34 @@ function createLesson($pdo, $data, $teacherId) {
     }
 }
 
-// READ - Get lessons for teacher
-// function getLessons($pdo, $teacherId, $filters = []) {
-//     try {
-//         $sql = "SELECT 
-//                     l.id,
-//                     l.teacher_id,
-//                     l.student_id,
-//                     l.class_id,
-//                     l.lesson_date as date,
-//                     l.lesson_time as time,
-//                     l.duration,
-//                     l.frequency,
-//                     l.notes,
-//                     l.payment_amount as payment,
-//                     l.payment_method,
-//                     l.status,
-//                     CONCAT(s.first_name, ' ', s.last_name) AS student_name,
-//                     c.name,
-//                     l.created_at,
-//                     l.updated_at
-//                 FROM lesson l
-//                 INNER JOIN student s ON l.student_id = s.id
-//                 INNER JOIN class c ON l.class_id = c.id
-//                 WHERE l.teacher_id = :teacher_id";
-        
-//         $params = [':teacher_id' => $teacherId];
-        
-//         // Add filters if provided
-//         if (!empty($filters['start_date'])) {
-//             $sql .= " AND l.lesson_date >= :start_date";
-//             $params[':start_date'] = $filters['start_date'];
-//         }
-        
-//         if (!empty($filters['end_date'])) {
-//             $sql .= " AND l.lesson_date <= :end_date";
-//             $params[':end_date'] = $filters['end_date'];
-//         }
-        
-//         if (!empty($filters['student_id'])) {
-//             $sql .= " AND l.student_id = :student_id";
-//             $params[':student_id'] = $filters['student_id'];
-//         }
-        
-//         if (!empty($filters['status'])) {
-//             $sql .= " AND l.status = :status";
-//             $params[':status'] = $filters['status'];
-//         }
-        
-//         $sql .= " ORDER BY l.lesson_date ASC, l.lesson_time ASC";
-        
-//         $stmt = $pdo->prepare($sql);
-//         $stmt->execute($params);
-        
-//         return [
-//             'success' => true,
-//             'lessons' => $stmt->fetchAll()
-//         ];
-        
-//     } catch (PDOException $e) {
-//         http_response_code(500);
-//         return ['error' => 'Failed to fetch lessons', 'message' => $e->getMessage()];
-//     }
-// }
+function nextLessonDate(DateTime $date, string $frequency): DateTime {
+    $new = clone $date;
 
-// READ - Get single lesson by ID
-function getLessonById($pdo, $lessonId, $teacherId) {
+    switch ($frequency) {
+        case 'weekly':
+            $new->modify('+1 week');
+            break;
+        case 'biweekly':
+            $new->modify('+2 weeks');
+            break;
+        case 'monthly':
+            $new->modify('+1 month');
+            break;
+        default: // single
+            break;
+    }
+
+    return $new;
+}
+
+// READ - Get lessons for teacher
+function getLessons($pdo, $teacherId, $filters = []) {
     try {
         $sql = "SELECT 
                     l.id,
                     l.teacher_id,
                     l.student_id,
-                    l.class_id,
+                    l.course_id,
                     l.lesson_date as date,
                     l.lesson_time as time,
                     l.duration,
@@ -339,20 +281,79 @@ function getLessonById($pdo, $lessonId, $teacherId) {
                     l.notes,
                     l.payment_amount as payment,
                     l.payment_method,
-                    l.status,
                     CONCAT(s.first_name, ' ', s.last_name) AS student_name,
                     c.name,
                     l.created_at,
                     l.updated_at
                 FROM lesson l
                 INNER JOIN student s ON l.student_id = s.id
-                INNER JOIN class c ON l.class_id = c.id
-                WHERE l.id = :lesson_id AND l.teacher_id = :teacher_id";
+                INNER JOIN course c ON l.course_id = c.id ";
+        
+        if (!empty($filters['teacher_id'])) {
+            $sql .= "WHERE l.teacher_id = :teacher_id";
+            $params[':teacher_id'] = $filters['teacher_id'];
+        }
+        
+        // Add filters if provided
+        if (!empty($filters['start_date'])) {
+            $sql .= ((stripos($sql, 'WHERE') === false) ? " WHERE" : " AND") . " l.lesson_date >= :start_date";
+            $params[':start_date'] = $filters['start_date'];
+        }
+        
+        if (!empty($filters['end_date'])) {
+            $sql .= ((stripos($sql, 'WHERE') === false) ? " WHERE" : " AND") . " l.lesson_date <= :end_date";
+            $params[':end_date'] = $filters['end_date'];
+        }
+        
+        if (!empty($filters['student_id'])) {
+            $sql .= ((stripos($sql, 'WHERE') === false) ? " WHERE" : " AND") . " l.student_id = :student_id";
+            $params[':student_id'] = $filters['student_id'];
+        }
+        
+        $sql .= " ORDER BY l.lesson_date ASC";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $lessons = $stmt->fetchAll();
+        
+        return [
+            'success' => true,
+            'lessons' => $lessons
+        ];
+        
+    } catch (PDOException $e) {
+        http_response_code(500);
+        return ['error' => 'Failed to fetch lessons', 'message' => $e->getMessage()];
+    }
+}
+
+// READ - Get single lesson by ID
+function getLessonById($pdo, $lessonId) {
+    try {
+        $sql = "SELECT 
+                    l.id,
+                    l.teacher_id,
+                    l.student_id,
+                    l.course_id,
+                    l.lesson_date as date,
+                    l.lesson_time as time,
+                    l.duration,
+                    l.frequency,
+                    l.notes,
+                    l.payment_amount as payment,
+                    l.payment_method,
+                    CONCAT(s.first_name, ' ', s.last_name) AS student_name,
+                    c.name,
+                    l.created_at,
+                    l.updated_at
+                FROM lesson l
+                INNER JOIN student s ON l.student_id = s.id
+                INNER JOIN course c ON l.course_id = c.id
+                WHERE l.id = :lesson_id";
         
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            ':lesson_id' => $lessonId,
-            ':teacher_id' => $teacherId
+            ':lesson_id' => $lessonId
         ]);
         
         $lesson = $stmt->fetch();
@@ -370,10 +371,53 @@ function getLessonById($pdo, $lessonId, $teacherId) {
     }
 }
 
+// Get Lessons by Teacher ID
+function getLessonsByTeacherId($pdo, $teacherId) {
+    try {
+        $sql = "SELECT 
+                    l.id,
+                    l.teacher_id,
+                    l.student_id,
+                    l.course_id,
+                    l.lesson_date as date,
+                    DATE_FORMAT(l.lesson_time, '%h:%i %p') AS time,
+                    l.duration,
+                    l.frequency,
+                    l.notes,
+                    l.payment_amount as payment,
+                    l.payment_method,
+                    CONCAT(s.first_name, ' ', s.last_name) AS student_name,
+                    c.name,
+                    l.created_at,
+                    l.updated_at
+                FROM lesson l
+                INNER JOIN student s ON l.student_id = s.id
+                INNER JOIN course c ON l.course_id = c.id
+                WHERE l.teacher_id = :teacher_id
+                ORDER BY l.lesson_date ASC";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':teacher_id' => $teacherId]);
+        
+        $lessons = $stmt->fetchAll();
+        
+        if (!$lessons) {
+            http_response_code(404);
+            return null;
+        }
+        
+        return $lessons;
+        
+    } catch (PDOException $e) {
+        http_response_code(500);
+        return null;
+    }
+}
+
 // UPDATE - Modify existing lesson
-function updateLesson($pdo, $lessonId, $data, $teacherId) {
+function updateLesson($pdo, $lessonId, $data) {
     // First verify the lesson belongs to this teacher
-    $existing = getLessonById($pdo, $lessonId, $teacherId);
+    $existing = getLessonById($pdo, $lessonId);
     if (!$existing) {
         http_response_code(404);
         return ['error' => 'Lesson not found or access denied'];
@@ -388,16 +432,21 @@ function updateLesson($pdo, $lessonId, $data, $teacherId) {
     try {
         // Build dynamic UPDATE query based on provided fields
         $updateFields = [];
-        $params = [':id' => $lessonId, ':teacher_id' => $teacherId];
+        $params = [':id' => $lessonId];
         
         if (isset($data['student_id'])) {
             $updateFields[] = "student_id = :student_id";
             $params[':student_id'] = $data['student_id'];
         }
+
+        if (isset($data['teacher_id'])) {
+            $updateFields[] = "teacher_id = :teacher_id";
+            $params[':teacher_id'] = $data['teacher_id'];
+        }
         
-        if (isset($data['class_id'])) {
-            $updateFields[] = "class_id = :class_id";
-            $params[':class_id'] = $data['class_id'];
+        if (isset($data['course_id'])) {
+            $updateFields[] = "course_id = :course_id";
+            $params[':course_id'] = $data['course_id'];
         }
         
         if (isset($data['date'])) {
@@ -435,11 +484,6 @@ function updateLesson($pdo, $lessonId, $data, $teacherId) {
             $params[':payment_method'] = $data['payment_method'];
         }
         
-        if (isset($data['status'])) {
-            $updateFields[] = "status = :status";
-            $params[':status'] = $data['status'];
-        }
-        
         if (empty($updateFields)) {
             http_response_code(400);
             return ['error' => 'No fields to update'];
@@ -452,7 +496,7 @@ function updateLesson($pdo, $lessonId, $data, $teacherId) {
         $stmt->execute($params);
         
         // Fetch updated lesson
-        $lesson = getLessonById($pdo, $lessonId, $teacherId);
+        $lesson = getLessonById($pdo, $lessonId);
         
         return [
             'success' => true,
@@ -496,7 +540,6 @@ function deleteLesson($pdo, $lessonId, $teacherId) {
 // Main request handler
 try {
     $pdo = getDBConnection();
-    $teacherId = getTeacherId();
     $method = $_SERVER['REQUEST_METHOD'];
     
     // Get request data
@@ -511,14 +554,22 @@ try {
                 'start_date' => $_GET['start_date'] ?? null,
                 'end_date' => $_GET['end_date'] ?? null,
                 'student_id' => $_GET['student_id'] ?? null,
-                'status' => $_GET['status'] ?? null
+                'teacher_id' => $_GET['teacher_id'] ?? null
             ];
             
             if (isset($_GET['id'])) {
                 // Get single lesson
-                $lesson = getLessonById($pdo, $_GET['id'], $teacherId);
+                $lesson = getLessonById($pdo, $_GET['id']);
                 if ($lesson) {
                     echo json_encode(['success' => true, 'lesson' => $lesson]);
+                } else {
+                    echo json_encode(['error' => 'Lesson not found']);
+                }
+            } else if (isset($_GET['teacher_id'])) {
+                // Get lessons by teacher ID
+                $lessons = getLessonsByTeacherId($pdo, $_GET['teacher_id']);
+                if ($lessons) {
+                    echo json_encode(['success' => true, 'lessons' => $lessons]);
                 } else {
                     echo json_encode(['error' => 'Lesson not found']);
                 }

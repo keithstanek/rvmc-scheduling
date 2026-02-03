@@ -380,31 +380,25 @@ $TEACHERS_API_URI = "api/teachers.php";
             renderCalendar();
         });
 
-        async function initializeData() {            
-            teacherId = 1; // This would come from session
-
+        async function initializeData() {
             try {
                 const [
                     studentsResp, 
                     coursesResp, 
-                    lessonsResp,
                     teachersResp
                 ] = await Promise.all([
                     fetch('<?= $STUDENTS_API_URI ?>').then(res => res.json()),
                     fetch('<?= $CLASSES_API_URI ?>').then(res => res.json()),
-                    fetch('<?= $LESSONS_API_URI ?>').then(res => res.json()),
                     fetch('<?= $TEACHERS_API_URI ?>').then(res => res.json())
                 ]);
 
                 students = Array.isArray(studentsResp.students) ? studentsResp.students : [];
                 courses = Array.isArray(coursesResp.courses) ? coursesResp.courses : [];
-                lessons = Array.isArray(lessonsResp.lessons) ? lessonsResp.lessons : [];
                 teachers = Array.isArray(teachersResp.teachers) ? teachersResp.teachers : [];
                 originalCourses = [...courses];
             } catch (e) {
                 students = [];
                 courses = [];
-                lessons = [];
             }
             populateDropdowns();
         }
@@ -432,6 +426,7 @@ $TEACHERS_API_URI = "api/teachers.php";
                 const selectedTeacher = teachers.find(t => t.id === selectedId);
 
                 if (selectedTeacher) {
+                    teacherId = selectedTeacher.id;
                     filterCourses(selectedTeacher.id);
                     await getLessonsByTeacherId(selectedTeacher.id);
                 }
@@ -439,8 +434,7 @@ $TEACHERS_API_URI = "api/teachers.php";
         }
 
         function filterCourses(teacherId) {
-            const teacher = teachers.find(t => t.id === teacherId);
-            console.log('updating courses', teacher)
+            teacher = teachers.find(t => t.id === teacherId);
             courses = teacher.courses;
             classSelect.innerHTML = ''; // Clear existing options
             classSelect.innerHTML = `<option value="">Select Class</option>`;
@@ -457,6 +451,7 @@ $TEACHERS_API_URI = "api/teachers.php";
                 const response = await fetch(`<?= $LESSONS_API_URI ?>?teacher_id=${teacherId}`);
                 const data = await response.json();
                 lessons = Array.isArray(data.lessons) ? data.lessons : [];
+                renderCalendar();
             } catch (e) {
                 lessons = [];
             }
@@ -668,7 +663,7 @@ $TEACHERS_API_URI = "api/teachers.php";
             item.className = `lesson-item ${lesson.frequency}`;
             item.innerHTML = `
                 <div><strong>${lesson.time}</strong> ${lesson.student_name}</div>
-                <div style="font-size: 11px;">${lesson.class_name}</div>
+                <div style="font-size: 11px;">${lesson.name}</div>
             `;
             item.onclick = () => openLessonModal(lesson);
             return item;
@@ -708,9 +703,9 @@ $TEACHERS_API_URI = "api/teachers.php";
                 document.getElementById('lessonModalTitle').textContent = 'Edit Lesson';
                 document.getElementById('lessonId').value = lesson.id;
                 document.getElementById('studentSelect').value = lesson.student_id;
-                document.getElementById('classSelect').value = lesson.class_id;
+                document.getElementById('classSelect').value = lesson.course_id;
                 document.getElementById('lessonDate').value = lesson.date;
-                document.getElementById('lessonTime').value = lesson.time;
+                document.getElementById('lessonTime').value = convertTo24Hour(lesson.time);
                 document.getElementById('lessonDuration').value = lesson.duration;
                 document.getElementById('lessonFrequency').value = lesson.frequency;
                 document.getElementById('lessonNotes').value = lesson.notes || '';
@@ -727,6 +722,20 @@ $TEACHERS_API_URI = "api/teachers.php";
             modal.show();
         }
 
+        function convertTo24Hour(time12h) {
+            const [time, modifier] = time12h.split(' ');
+            let [hours, minutes] = time.split(':');
+
+            if (modifier === 'PM' && hours !== '12') {
+                hours = parseInt(hours, 10) + 12;
+            }
+            if (modifier === 'AM' && hours === '12') {
+                hours = '00';
+            }
+
+            return `${hours.toString().padStart(2, '0')}:${minutes}`;
+        }
+
         async function saveLesson() {
             const form = document.getElementById('lessonForm');
             if (!form.checkValidity()) {
@@ -737,42 +746,22 @@ $TEACHERS_API_URI = "api/teachers.php";
             const lessonData = {
                 id: document.getElementById('lessonId').value,
                 student_id: document.getElementById('studentSelect').value,
-                class_id: document.getElementById('classSelect').value,
+                course_id: document.getElementById('classSelect').value,
                 date: document.getElementById('lessonDate').value,
                 time: document.getElementById('lessonTime').value,
                 duration: document.getElementById('lessonDuration').value,
                 frequency: document.getElementById('lessonFrequency').value,
                 notes: document.getElementById('lessonNotes').value,
                 payment: document.getElementById('paymentAmount').value,
-                payment_method: document.getElementById('paymentMethod').value
+                payment_method: document.getElementById('paymentMethod').value,
+                teacher_id: teacherId + ""
             };
 
             // API call to save lesson
             const resp = await fetch('<?= $LESSONS_API_URI ?>', { method: 'POST', body: JSON.stringify(lessonData) })
-            console.log('-------------------------------------')
-            console.log('save lesson response:', resp)
-            console.log('-------------------------------------')
-
-            // Mock save
-            const student = students.find(s => s.id == lessonData.student_id);
-            const course = courses.find(c => c.id == lessonData.class_id);
-
-            const lesson = {
-                ...lessonData,
-                id: lessonData.id || Date.now(),
-                student_name: student.name,
-                class_name: course.name
-            };
-
-            if (lessonData.id) {
-                const index = lessons.findIndex(l => l.id == lessonData.id);
-                lessons[index] = lesson;
-            } else {
-                lessons.push(lesson);
-            }
-
-            bootstrap.Modal.getInstance(document.getElementById('lessonModal')).hide();
-            renderCalendar();
+            console.log('insert response', resp)
+            await bootstrap.Modal.getInstance(document.getElementById('lessonModal')).hide();
+            await getLessonsByTeacherId(teacherId);
         }
 
         function deleteLesson() {
