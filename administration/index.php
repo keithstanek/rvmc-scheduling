@@ -227,6 +227,7 @@ $TEACHERS_API_URI = "api/teachers.php";
                 </p>
             </div>
             <div class="d-flex gap-2">
+                <h4 class="mb-0 mx-3 align-self-center" id="currentPeriod"></h4>
                 <button class="btn btn-outline-primary" id="todayBtn">
                     <i class="bi bi-calendar-day"></i> Today
                 </button>
@@ -236,19 +237,18 @@ $TEACHERS_API_URI = "api/teachers.php";
                 <button class="btn btn-outline-secondary" id="nextBtn">
                     <i class="bi bi-chevron-right"></i>
                 </button>
-                <h4 class="mb-0 mx-3 align-self-center" id="currentPeriod"></h4>
             </div>
         </div>
         <ul class="nav view-tabs mt-3" id="viewTabs">
             <li class="nav-item">
                 <a class="nav-link active" href="#" data-view="month">Month</a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="#" data-view="week">Week</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#" data-view="day">Day</a>
-            </li>
+            </li> -->
         </ul>
     </div>
 
@@ -271,7 +271,7 @@ $TEACHERS_API_URI = "api/teachers.php";
     </div>
 
     <!-- Floating Add Button -->
-    <button class="btn btn-primary add-lesson-btn" data-bs-toggle="modal" data-bs-target="#lessonModal" onclick="openLessonModal()">
+    <button class="btn btn-primary add-lesson-btn" onclick="openLessonModal()">
         <i class="bi bi-plus-lg fs-4"></i>
     </button>
 
@@ -345,15 +345,21 @@ $TEACHERS_API_URI = "api/teachers.php";
                                 </select>
                             </div>
                         </div>
+                        <div class="mb-3" id="applyToAllDiv" style="display: none;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="applyToAll">
+                                <label class="form-check-label" for="applyToAll"><b>Apply this update to all lessons in this series</b></label>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" id="deleteBtn" style="display:none;" onclick="deleteLesson()">
-                        <i class="bi bi-trash"></i> Delete
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" onclick="saveLesson()">
                         <i class="bi bi-save"></i> Save
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="deleteBtn" style="display:none;" onclick="deleteLesson()">
+                        <i class="bi bi-trash"></i> Delete
                     </button>
                 </div>
             </div>
@@ -695,6 +701,15 @@ $TEACHERS_API_URI = "api/teachers.php";
         }
 
         function openLessonModal(lesson = null) {
+            if (!teacherId) {
+                alert('Please select a teacher first.');
+                return;
+            }
+
+            lesson 
+                ? document.getElementById('applyToAllDiv').style.display = 'block' 
+                : document.getElementById('applyToAllDiv').style.display = 'none';
+
             const modal = new bootstrap.Modal(document.getElementById('lessonModal'));
             const form = document.getElementById('lessonForm');
             form.reset();
@@ -754,7 +769,8 @@ $TEACHERS_API_URI = "api/teachers.php";
                 notes: document.getElementById('lessonNotes').value,
                 payment: document.getElementById('paymentAmount').value,
                 payment_method: document.getElementById('paymentMethod').value,
-                teacher_id: teacherId + ""
+                teacher_id: teacherId + "",
+                apply_to_all: document.getElementById('applyToAll').checked ? 1 : 0
             };
 
             // API call to save lesson
@@ -764,17 +780,14 @@ $TEACHERS_API_URI = "api/teachers.php";
             await getLessonsByTeacherId(teacherId);
         }
 
-        function deleteLesson() {
+        async function deleteLesson() {
             if (!confirm('Are you sure you want to delete this lesson?')) return;
-
-            const lessonId = document.getElementById('lessonId').value;
-            
-            // API call to delete
-            // fetch('api/delete_lesson.php', { method: 'POST', body: JSON.stringify({id: lessonId}) })
-
-            lessons = lessons.filter(l => l.id != lessonId);
+            const id = document.getElementById('lessonId').value;
+            const apply_to_all = document.getElementById('applyToAll').checked ? 1 : 0;
+            const lesson = lessons.find(l => l.id == id);
+            const resp = await fetch('<?= $LESSONS_API_URI ?>', { method: 'DELETE', body: JSON.stringify({id,apply_to_all}) });
             bootstrap.Modal.getInstance(document.getElementById('lessonModal')).hide();
-            renderCalendar();
+            await getLessonsByTeacherId(teacherId);
         }
     </script>
 </body>
