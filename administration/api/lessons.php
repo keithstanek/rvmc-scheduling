@@ -5,9 +5,6 @@ require dirname(__FILE__) . "/../../classes/all_classes_include.php";
  * Handles CRUD operations for music lessons
  */
 
-// Start session to get logged-in teacher
-session_start();
-
 // Set headers for JSON response and CORS
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -118,81 +115,6 @@ function generateRecurringDates($startDate, $frequency, $count = 100) {
     return $dates;
 }
 
-// Override getLessons to expand recurring lessons for calendar
-function expandRecurringLessons($lessons, $filters = []) {
-    $expanded = [];
-    foreach ($lessons as $lesson) {
-        if ($lesson['frequency'] === 'single') {
-            $expanded[] = $lesson;
-            continue;
-        }
-        // Generate future dates for recurring lessons
-        $dates = generateRecurringDates($lesson['date'], $lesson['frequency'], 24);
-        foreach ($dates as $date) {
-            // Filter by date range if provided
-            if (!empty($filters['start_date']) && $date < $filters['start_date']) continue;
-            if (!empty($filters['end_date']) && $date > $filters['end_date']) continue;
-            $copy = $lesson;
-            $copy['date'] = $date;
-            $expanded[] = $copy;
-        }
-    }
-    return $expanded;
-}
-
-// Patch getLessons to expand recurring lessons for calendar
-// function getLessons($pdo, $teacherId, $filters = []) {
-//     try {
-//         $sql = "SELECT 
-//                     l.id,
-//                     l.teacher_id,
-//                     l.student_id,
-//                     l.course_id,
-//                     l.lesson_date as date,
-//                     l.frequency,
-//                     l.notes,
-//                     l.payment_amount as payment,
-//                     l.payment_method,
-//                     CONCAT(s.first_name, ' ', s.last_name) AS student_name,
-//                     c.name,
-//                     l.created_at,
-//                     l.updated_at
-//                 FROM lesson l
-//                 INNER JOIN student s ON l.student_id = s.id
-//                 INNER JOIN course c ON l.course_id = c.id
-//                 WHERE l.teacher_id = :teacher_id";
-        
-//         $params = [':teacher_id' => $teacherId];
-        
-//         // Only filter by student, not date, so we can expand recurrences
-//         if (!empty($filters['student_id'])) {
-//             $sql .= " AND l.student_id = :student_id";
-//             $params[':student_id'] = $filters['student_id'];
-//         }
-//         $sql .= " ORDER BY l.lesson_date ASC";
-//         $stmt = $pdo->prepare($sql);
-//         $stmt->execute($params);
-//         $lessons = $stmt->fetchAll();
-
-//         // Expand recurring lessons for calendar
-//         $expanded = expandRecurringLessons($lessons, $filters);
-
-//         // Sort by date/time
-//         usort($expanded, function($a, $b) {
-//             $cmp = strcmp($a['date'], $b['date']);
-//             if ($cmp === 0) return strcmp($a['time'], $b['time']);
-//             return $cmp;
-//         });
-
-//         return [
-//             'success' => true,
-//             'lessons' => $expanded
-//         ];
-//     } catch (PDOException $e) {
-//         http_response_code(500);
-//         return ['error' => 'Failed to fetch lessons', 'message' => $e->getMessage()];
-//     }
-// }
 // CREATE - Add new lesson
 function createLesson($pdo, $data) {
     $errors = validateLessonData($data);
@@ -271,6 +193,7 @@ function getLessons($pdo, $teacherId, $filters = []) {
     try {
         $sql = "SELECT 
                     l.id,
+                    l.series_id,
                     l.teacher_id,
                     l.student_id,
                     l.course_id,
@@ -332,6 +255,7 @@ function getLessonById($pdo, $lessonId) {
     try {
         $sql = "SELECT 
                     l.id,
+                    l.series_id,
                     l.teacher_id,
                     l.student_id,
                     l.course_id,
@@ -376,6 +300,7 @@ function getLessonsByTeacherId($pdo, $teacherId) {
     try {
         $sql = "SELECT 
                     l.id,
+                    l.series_id,
                     l.teacher_id,
                     l.student_id,
                     l.course_id,
@@ -415,9 +340,9 @@ function getLessonsByTeacherId($pdo, $teacherId) {
 }
 
 // UPDATE - Modify existing lesson
-function updateLesson($pdo, $lessonId, $data) {
+function updateLesson($pdo, $data) {
     // First verify the lesson belongs to this teacher
-    $existing = getLessonById($pdo, $lessonId);
+    $existing = getLessonById($pdo, $data['id']);
     if (!$existing) {
         http_response_code(404);
         return ['error' => 'Lesson not found or access denied'];
@@ -428,11 +353,13 @@ function updateLesson($pdo, $lessonId, $data) {
         http_response_code(400);
         return ['error' => 'Validation failed', 'details' => $errors];
     }
+
+    $params = [];
+    $applyToAll = isset($data['apply_to_all']) ? (bool)$data['apply_to_all'] : false;
     
     try {
         // Build dynamic UPDATE query based on provided fields
         $updateFields = [];
-        $params = [':id' => $lessonId];
         
         if (isset($data['student_id'])) {
             $updateFields[] = "student_id = :student_id";
@@ -449,7 +376,7 @@ function updateLesson($pdo, $lessonId, $data) {
             $params[':course_id'] = $data['course_id'];
         }
         
-        if (isset($data['date'])) {
+        if (isset($data['date']) && !$applyToAll) {
             $updateFields[] = "lesson_date = :lesson_date";
             $params[':lesson_date'] = $data['date'];
         }
@@ -492,11 +419,19 @@ function updateLesson($pdo, $lessonId, $data) {
         $sql = "UPDATE lesson SET " . implode(', ', $updateFields) . 
                " WHERE id = :id AND teacher_id = :teacher_id";
         
+        if ($applyToAll && $existing['series_id']) {
+            $params[':series_id'] = $existing['series_id'];
+            $sql = "UPDATE lesson SET " . implode(', ', $updateFields) . 
+               " WHERE series_id = :series_id";
+        } else {
+            $params[':id'] = $data['id'];
+            $params[':teacher_id'] = $existing['teacher_id'];
+        }
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         
         // Fetch updated lesson
-        $lesson = getLessonById($pdo, $lessonId);
+        $lesson = getLessonById($pdo, $data['id']);
         
         return [
             'success' => true,
@@ -511,25 +446,35 @@ function updateLesson($pdo, $lessonId, $data) {
 }
 
 // DELETE - Remove lesson
-function deleteLesson($pdo, $lessonId, $teacherId) {
+function deleteLesson($pdo, $data) {
     try {
-        // Verify lesson belongs to teacher before deleting
-        $sql = "DELETE FROM lesson WHERE id = :id AND teacher_id = :teacher_id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':id' => $lessonId,
-            ':teacher_id' => $teacherId
-        ]);
-        
-        if ($stmt->rowCount() === 0) {
+        $existing = getLessonById($pdo, $data['id']);
+        if (!$existing) {
             http_response_code(404);
-            return ['error' => 'Lesson not found or access denied'];
+            return ['error' => 'Lesson not found'];
         }
+
+        $applyToAll = isset($data['apply_to_all']) ? (bool)$data['apply_to_all'] : false;
+        if ($applyToAll && $existing['series_id']) {
+            // Delete all lessons in the series
+            $sql = "DELETE FROM lesson WHERE series_id = :series_id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':series_id' => $existing['series_id']]);
+            
+            return [
+                'success' => true,
+                'message' => 'All lessons in the series deleted successfully'
+            ];
+        } else {
+            $sql = "DELETE FROM lesson WHERE id = :id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':id' => $data['id']]);
         
-        return [
-            'success' => true,
-            'message' => 'Lesson deleted successfully'
-        ];
+            return [
+                'success' => true,
+                'message' => 'Lesson deleted successfully'
+            ];
+        }
         
     } catch (PDOException $e) {
         http_response_code(500);
@@ -582,26 +527,17 @@ try {
             
         case 'POST':
             // Determine if this is a save or delete based on data
-            if (isset($data['action']) && $data['action'] === 'delete') {
-                // Delete lesson
-                if (empty($data['id'])) {
-                    http_response_code(400);
-                    echo json_encode(['error' => 'Lesson ID is required']);
-                } else {
-                    $result = deleteLesson($pdo, $data['id'], $teacherId);
-                    echo json_encode($result);
-                }
-            } else {
-                // Create or Update lesson
-                if (!empty($data['id'])) {
-                    // Update existing lesson
-                    $result = updateLesson($pdo, $data['id'], $data, $teacherId);
-                } else {
-                    // Create new lesson
-                    $result = createLesson($pdo, $data, $teacherId);
-                }
+            // if (empty($data['id'])) {
+            //     http_response_code(400);
+            //     echo json_encode(['error' => 'Lesson ID is required']);
+            // } else {
+                !empty($data['id'])
+                    ? $result = updateLesson($pdo, $data)
+                    : $result = createLesson($pdo, $data);
+
                 echo json_encode($result);
-            }
+            // }
+            
             break;
             
         case 'PUT':
@@ -610,18 +546,18 @@ try {
                 http_response_code(400);
                 echo json_encode(['error' => 'Lesson ID is required']);
             } else {
-                $result = updateLesson($pdo, $data['id'], $data, $teacherId);
+                $result = updateLesson($pdo, $data);
                 echo json_encode($result);
             }
             break;
             
         case 'DELETE':
             // Delete lesson
-            if (empty($_GET['id'])) {
+            if (empty($data['id'])) {
                 http_response_code(400);
                 echo json_encode(['error' => 'Lesson ID is required']);
             } else {
-                $result = deleteLesson($pdo, $_GET['id'], $teacherId);
+                $result = deleteLesson($pdo, $data);
                 echo json_encode($result);
             }
             break;
