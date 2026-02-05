@@ -746,7 +746,7 @@ $TEACHERS_API_URI = "api/teachers.php";
 
             const modal = new bootstrap.Modal(document.getElementById('lessonModal'));
             const form = document.getElementById('lessonForm');
-            form.reset();
+            form.reset(); 
 
             if (lesson) {
                 document.getElementById('lessonModalTitle').textContent = 'Edit Lesson';
