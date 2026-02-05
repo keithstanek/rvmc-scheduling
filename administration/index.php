@@ -222,7 +222,7 @@ $TEACHERS_API_URI = "api/teachers.php";
                 <h2 class="mb-0">Music Lesson Scheduler</h2>
                 <p class="text-muted mb-0" id="teacherName">
                     <select id="teacherSelect" class="form-select mt-1">
-                        <option value="">Select a teacher</option>
+                        <option value="">Show all Lessons or Choose a teacher</option>
                     </select>
                 </p>
             </div>
@@ -286,6 +286,20 @@ $TEACHERS_API_URI = "api/teachers.php";
                 <div class="modal-body">
                     <form id="lessonForm">
                         <input type="hidden" id="lessonId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Teacher *</label>
+                                <select class="form-select" id="teacherSelectModal" required>
+                                    <option value="">Select Teacher</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Studio *</label>
+                                <select class="form-select" id="studioSelect">
+                                    <option value="">Select Studio</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Student *</label>
@@ -391,57 +405,82 @@ $TEACHERS_API_URI = "api/teachers.php";
                 const [
                     studentsResp, 
                     coursesResp, 
-                    teachersResp
+                    teachersResp,
+                    lessonResp
                 ] = await Promise.all([
                     fetch('<?= $STUDENTS_API_URI ?>').then(res => res.json()),
                     fetch('<?= $CLASSES_API_URI ?>').then(res => res.json()),
-                    fetch('<?= $TEACHERS_API_URI ?>').then(res => res.json())
+                    fetch('<?= $TEACHERS_API_URI ?>').then(res => res.json()),
+                    fetch('<?= $LESSONS_API_URI ?>').then(res => res.json())
                 ]);
 
                 students = Array.isArray(studentsResp.students) ? studentsResp.students : [];
                 courses = Array.isArray(coursesResp.courses) ? coursesResp.courses : [];
                 teachers = Array.isArray(teachersResp.teachers) ? teachersResp.teachers : [];
+                lessons = Array.isArray(lessonResp.lessons) ? lessonResp.lessons : [];
                 originalCourses = [...courses];
             } catch (e) {
                 students = [];
                 courses = [];
             }
             populateDropdowns();
+            renderCalendar();
         }
 
         async function populateDropdowns() {
             const studentSelect = document.getElementById('studentSelect');
             const teacherSelect = document.getElementById('teacherSelect');
-            
+            const teacherSelectModal = document.getElementById('teacherSelectModal');
+            const classSelect = document.getElementById('classSelect');
+
+            courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.id;
+                option.textContent = course.name;
+                classSelect.appendChild(option);
+            });
+
             students.forEach(student => {
                 const option = document.createElement('option');
                 option.value = student.id;
                 option.textContent = `${student.first_name} ${student.last_name}`;
                 studentSelect.appendChild(option);
             });
-
             teachers.forEach(teacher => {
                 const option = document.createElement('option');
                 option.value = teacher.id;
                 option.textContent = `${teacher.first_name} ${teacher.last_name}`;
                 teacherSelect.appendChild(option);
+                teacherSelectModal.appendChild(option.cloneNode(true));
             });
 
             teacherSelect.addEventListener("change", async () => {
                 const selectedId = parseInt(teacherSelect.value);
                 const selectedTeacher = teachers.find(t => t.id === selectedId);
 
-                if (selectedTeacher) {
-                    teacherId = selectedTeacher.id;
-                    filterCourses(selectedTeacher.id);
-                    await getLessonsByTeacherId(selectedTeacher.id);
-                }
+                teacherId = selectedTeacher ? selectedTeacher.id : null;
+                filterCourses(teacherId);
+                await getLessonsByTeacherId(teacherId);
+            });
+
+            teacherSelectModal.addEventListener("change", async () => {
+                const selectedId = parseInt(teacherSelectModal.value);
+                const selectedTeacher = teachers.find(t => t.id === selectedId);
+
+                teacherId = selectedTeacher ? selectedTeacher.id : null;
+                filterCourses(teacherId);
             });
         }
 
         function filterCourses(teacherId) {
-            teacher = teachers.find(t => t.id === teacherId);
-            courses = teacher.courses;
+            if (!teacherId) {
+                courses = originalCourses;
+            } else {
+                teacher = teachers.find(t => t.id === teacherId);
+                courses = teacher.courses;
+            }
+            
+            const classSelect = document.getElementById('classSelect');
             classSelect.innerHTML = ''; // Clear existing options
             classSelect.innerHTML = `<option value="">Select Class</option>`;
             courses.forEach(course => {
@@ -454,7 +493,7 @@ $TEACHERS_API_URI = "api/teachers.php";
 
         async function getLessonsByTeacherId(teacherId) {
             try {
-                const response = await fetch(`<?= $LESSONS_API_URI ?>?teacher_id=${teacherId}`);
+                const response = await fetch(`<?= $LESSONS_API_URI ?>` + (teacherId ? `?teacher_id=${teacherId}` : ''));
                 const data = await response.json();
                 lessons = Array.isArray(data.lessons) ? data.lessons : [];
                 renderCalendar();
@@ -668,8 +707,8 @@ $TEACHERS_API_URI = "api/teachers.php";
             const item = document.createElement('div');
             item.className = `lesson-item ${lesson.frequency}`;
             item.innerHTML = `
-                <div><strong>${lesson.time}</strong> ${lesson.student_name}</div>
-                <div style="font-size: 11px;">${lesson.name}</div>
+                <div><strong>${lesson.time}</strong> ${lesson.teacher_name}</div>
+                <div style="font-size: 11px;">${lesson.student_name} - ${lesson.name}</div>
             `;
             item.onclick = () => openLessonModal(lesson);
             return item;
@@ -701,18 +740,13 @@ $TEACHERS_API_URI = "api/teachers.php";
         }
 
         function openLessonModal(lesson = null) {
-            if (!teacherId) {
-                alert('Please select a teacher first.');
-                return;
-            }
-
             lesson 
                 ? document.getElementById('applyToAllDiv').style.display = 'block' 
                 : document.getElementById('applyToAllDiv').style.display = 'none';
 
             const modal = new bootstrap.Modal(document.getElementById('lessonModal'));
             const form = document.getElementById('lessonForm');
-            form.reset();
+            form.reset(); 
 
             if (lesson) {
                 document.getElementById('lessonModalTitle').textContent = 'Edit Lesson';

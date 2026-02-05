@@ -205,13 +205,15 @@ function getLessons($pdo, $teacherId, $filters = []) {
                     l.payment_amount as payment,
                     l.payment_method,
                     CONCAT(s.first_name, ' ', s.last_name) AS student_name,
+                    CONCAT(t.first_name, ' ', t.last_name) AS teacher_name,
                     c.name,
                     l.created_at,
                     l.updated_at
                 FROM lesson l
                 INNER JOIN student s ON l.student_id = s.id
-                INNER JOIN course c ON l.course_id = c.id ";
-        
+                INNER JOIN course c ON l.course_id = c.id
+                INNER JOIN teacher t ON l.teacher_id = t.id ";
+
         if (!empty($filters['teacher_id'])) {
             $sql .= "WHERE l.teacher_id = :teacher_id";
             $params[':teacher_id'] = $filters['teacher_id'];
@@ -266,13 +268,15 @@ function getLessonById($pdo, $lessonId) {
                     l.notes,
                     l.payment_amount as payment,
                     l.payment_method,
-                    CONCAT(s.first_name, ' ', s.last_name) AS student_name,
+                    CONCAT(s.first_name, ' ', s.last_name) AS student_name,                    
+                    CONCAT(t.first_name, ' ', t.last_name) AS teacher_name,
                     c.name,
                     l.created_at,
                     l.updated_at
                 FROM lesson l
                 INNER JOIN student s ON l.student_id = s.id
                 INNER JOIN course c ON l.course_id = c.id
+                INNER JOIN teacher t ON l.teacher_id = t.id
                 WHERE l.id = :lesson_id";
         
         $stmt = $pdo->prepare($sql);
@@ -312,12 +316,14 @@ function getLessonsByTeacherId($pdo, $teacherId) {
                     l.payment_amount as payment,
                     l.payment_method,
                     CONCAT(s.first_name, ' ', s.last_name) AS student_name,
+                    CONCAT(t.first_name, ' ', t.last_name) AS teacher_name,
                     c.name,
                     l.created_at,
                     l.updated_at
                 FROM lesson l
                 INNER JOIN student s ON l.student_id = s.id
                 INNER JOIN course c ON l.course_id = c.id
+                INNER JOIN teacher t ON l.teacher_id = t.id
                 WHERE l.teacher_id = :teacher_id
                 ORDER BY l.lesson_date ASC";
         
